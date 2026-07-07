@@ -11,28 +11,31 @@ interface AtivosTableProps {
   onExcluir: (ativo: IAtivo) => void;
 }
 
-type SortField = 'categoria' | 'status' | null;
+// Colunas que suportam ordenação
+type SortField = 'categoria' | 'status' | 'setor' | null;
 type SortOrder = 'asc' | 'desc';
 
 const getStatusClass = (status: string) => {
   switch (status) {
-    case 'Disponível': return styles.statusAvailable;
-    case 'Em Uso': return styles.statusInUse;
-    case 'Manutenção': return styles.statusMaintenance;
-    default: return '';
+    case 'Disponível':  return styles.statusAvailable;
+    case 'Em Uso':      return styles.statusInUse;
+    case 'Manutenção':  return styles.statusMaintenance;
+    case 'Estoque':     return styles.statusStock;
+    default:            return '';
   }
 };
 
-const AtivosTable: React.FC<AtivosTableProps> = ({ 
-  ativos, 
-  onEmprestimo, 
-  onDevolucao, 
-  onEditar, 
-  onExcluir 
+const AtivosTable: React.FC<AtivosTableProps> = ({
+  ativos,
+  onEmprestimo,
+  onDevolucao,
+  onEditar,
+  onExcluir,
 }) => {
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
+  // ── Lógica de ordenação ────────────────────────────────────────────────────
   const handleSort = (field: SortField) => {
     if (sortField === field) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
@@ -44,35 +47,59 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
 
   const sortedAtivos = [...ativos].sort((a, b) => {
     if (!sortField) return 0;
-    
-    const valueA = a[sortField];
-    const valueB = b[sortField];
-    
+
+    const valueA = (a[sortField] ?? '') as string;
+    const valueB = (b[sortField] ?? '') as string;
+
     if (valueA < valueB) return sortOrder === 'asc' ? -1 : 1;
     if (valueA > valueB) return sortOrder === 'asc' ? 1 : -1;
     return 0;
   });
 
+  // ── Helper: ícone de seta com indicação visual do campo ativo ──────────────
+  const SortIcon = ({ field }: { field: SortField }) => (
+    <ArrowUpDown
+      size={14}
+      className={`${styles.sortIcon} ${sortField === field ? styles.sortIconActive : ''}`}
+    />
+  );
+
+  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className={styles.container}>
+      {/* ── Tabela — desktop ───────────────────────────────────────────────── */}
       <table className={styles.table}>
         <thead>
           <tr>
             <th>Código</th>
             <th>Equipamento</th>
 
-            <th 
-              className={styles.sortableHeader} 
-              onClick={() => handleSort('status')}>
-              Categoria <ArrowUpDown size={14} className={styles.sortIcon} />
+            {/* Categoria — sortável */}
+            <th
+              className={styles.sortableHeader}
+              onClick={() => handleSort('categoria')}
+            >
+              Categoria <SortIcon field="categoria" />
             </th>
-            <th>Status</th>
+
+            {/* Status — sortável */}
+            <th
+              className={styles.sortableHeader}
+              onClick={() => handleSort('status')}
+            >
+              Status <SortIcon field="status" />
+            </th>
+
             <th>Responsável</th>
-            <th 
-              className={styles.sortableHeader} 
-              onClick={() => handleSort('categoria')}>
-              Última Movimentação <ArrowUpDown size={14} className={styles.sortIcon} />
+
+            {/* Setor — sortável */}
+            <th
+              className={styles.sortableHeader}
+              onClick={() => handleSort('setor')}
+            >
+              Setor <SortIcon field="setor" />
             </th>
+
             <th className={styles.actionsHeader}>Ações</th>
           </tr>
         </thead>
@@ -88,19 +115,35 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
                 </span>
               </td>
               <td>{ativo.responsavel || '—'}</td>
-              <td>{ativo.ultimaMovimentacao || '—'}</td>
+              <td>{ativo.setor || '—'}</td>
               <td>
                 <div className={styles.actions}>
-                  <button onClick={() => onEmprestimo(ativo)} title="Empréstimo" className={styles.actionBtn}>
+                  <button
+                    onClick={() => onEmprestimo(ativo)}
+                    title="Empréstimo"
+                    className={styles.actionBtn}
+                  >
                     <Handshake size={18} />
                   </button>
-                  <button onClick={() => onDevolucao(ativo)} title="Devolução" className={styles.actionBtn}>
+                  <button
+                    onClick={() => onDevolucao(ativo)}
+                    title="Devolução"
+                    className={styles.actionBtn}
+                  >
                     <CornerUpLeft size={18} />
                   </button>
-                  <button onClick={() => onEditar(ativo)} title="Editar" className={styles.actionBtn}>
+                  <button
+                    onClick={() => onEditar(ativo)}
+                    title="Editar"
+                    className={styles.actionBtn}
+                  >
                     <Pencil size={18} />
                   </button>
-                  <button onClick={() => onExcluir(ativo)} title="Excluir" className={`${styles.actionBtn} ${styles.dangerBtn}`}>
+                  <button
+                    onClick={() => onExcluir(ativo)}
+                    title="Excluir"
+                    className={`${styles.actionBtn} ${styles.dangerBtn}`}
+                  >
                     <Trash size={18} />
                   </button>
                 </div>
@@ -110,16 +153,20 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
         </tbody>
       </table>
 
-      {/* Mobile view - Cards */}
+      {/* ── Cards — mobile ─────────────────────────────────────────────────── */}
       <div className={styles.mobileList}>
         <div className={styles.mobileSortControls}>
           <button onClick={() => handleSort('categoria')} className={styles.sortBtn}>
-            Ordenar por Categoria <ArrowUpDown size={14} />
+            Categoria <ArrowUpDown size={14} />
           </button>
           <button onClick={() => handleSort('status')} className={styles.sortBtn}>
-            Ordenar por Status <ArrowUpDown size={14} />
+            Status <ArrowUpDown size={14} />
+          </button>
+          <button onClick={() => handleSort('setor')} className={styles.sortBtn}>
+            Setor <ArrowUpDown size={14} />
           </button>
         </div>
+
         {sortedAtivos.map((ativo) => (
           <div key={ativo.id} className={styles.mobileCard}>
             <div className={styles.cardHeader}>
@@ -132,13 +179,21 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
             <div className={styles.cardDetails}>
               <p><strong>Categoria:</strong> {ativo.categoria}</p>
               <p><strong>Responsável:</strong> {ativo.responsavel || '—'}</p>
-              <p><strong>Movimentação:</strong> {ativo.ultimaMovimentacao || '—'}</p>
+              <p><strong>Setor:</strong> {ativo.setor || '—'}</p>
             </div>
             <div className={styles.cardActions}>
-              <button onClick={() => onEmprestimo(ativo)} className={styles.actionBtn}><Handshake size={18} /></button>
-              <button onClick={() => onDevolucao(ativo)} className={styles.actionBtn}><CornerUpLeft size={18} /></button>
-              <button onClick={() => onEditar(ativo)} className={styles.actionBtn}><Pencil size={18} /></button>
-              <button onClick={() => onExcluir(ativo)} className={`${styles.actionBtn} ${styles.dangerBtn}`}><Trash size={18} /></button>
+              <button onClick={() => onEmprestimo(ativo)} className={styles.actionBtn}>
+                <Handshake size={18} />
+              </button>
+              <button onClick={() => onDevolucao(ativo)} className={styles.actionBtn}>
+                <CornerUpLeft size={18} />
+              </button>
+              <button onClick={() => onEditar(ativo)} className={styles.actionBtn}>
+                <Pencil size={18} />
+              </button>
+              <button onClick={() => onExcluir(ativo)} className={`${styles.actionBtn} ${styles.dangerBtn}`}>
+                <Trash size={18} />
+              </button>
             </div>
           </div>
         ))}

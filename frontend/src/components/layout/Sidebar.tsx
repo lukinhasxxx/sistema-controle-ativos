@@ -11,13 +11,13 @@ const Sidebar = () => {
         <span className={styles.logoText}>CEJAM</span>
       </div>
       <nav className={styles.nav}>
-        <Link href="/" className={styles.navItem}>
-          <LayoutDashboard size={20} />
-          <span>Dashboard</span>
-        </Link>
         <Link href="/" className={`${styles.navItem} ${styles.active}`}>
+          <LayoutDashboard size={20} />
+          <span>Inventário</span>
+        </Link>
+        <Link href="/" className={styles.navItem}>
           <Folder size={20} />
-          <span>Ativos</span>
+          <span>Todos os ativos</span>
         </Link>
         <Link href="/" className={styles.navItem}>
           <Handshake size={20} />
