@@ -18,6 +18,7 @@ export default function Login() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    localStorage.setItem('usuarioLogado', JSON.stringify({ id: '11111111-1111-1111-1111-111111111111', setor: 'TI' }));
     router.push('/');
   };
 
@@ -78,6 +79,10 @@ export default function Login() {
             <input type="text" className={styles.input} required />
           </div>
           <div className={styles.formGroup}>
+            <label>E-mail</label>
+            <input type="email" className={styles.input} required />
+          </div>
+          <div className={styles.formGroup}>
             <label>Setor</label>
             <select className={styles.input} required>
               <option value="">Selecione...</option>
@@ -98,6 +103,10 @@ export default function Login() {
               onChange={(e) => setCpf(e.target.value)}
               placeholder="00000000000"
             />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Senha</label>
+            <input type="password" className={styles.input} required />
           </div>
           <div className={styles.modalActions}>
             <Button type="button" variant="secondary" onClick={() => setIsRegisterModalOpen(false)}>Cancelar</Button>
