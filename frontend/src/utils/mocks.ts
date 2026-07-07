@@ -8,7 +8,7 @@ export const mockAtivos: IAtivo[] = [
     categoria: 'Monitor',
     status: 'Disponível',
     responsavel: null,
-    ultimaMovimentacao: null,
+    setor: 'TI',
   },
   {
     id: '2',
@@ -17,7 +17,7 @@ export const mockAtivos: IAtivo[] = [
     categoria: 'Projetor',
     status: 'Em Uso',
     responsavel: 'João Silva',
-    ultimaMovimentacao: '10/10/2023',
+    setor: 'Administrativo',
   },
   {
     id: '3',
@@ -26,7 +26,7 @@ export const mockAtivos: IAtivo[] = [
     categoria: 'Notebook',
     status: 'Disponível',
     responsavel: null,
-    ultimaMovimentacao: null,
+    setor: 'TI',
   },
   {
     id: '4',
@@ -35,7 +35,7 @@ export const mockAtivos: IAtivo[] = [
     categoria: 'Periférico',
     status: 'Em Uso',
     responsavel: 'Maria Santos',
-    ultimaMovimentacao: '12/10/2023',
+    setor: 'RH',
   },
   {
     id: '5',
@@ -44,7 +44,7 @@ export const mockAtivos: IAtivo[] = [
     categoria: 'Periférico',
     status: 'Manutenção',
     responsavel: null,
-    ultimaMovimentacao: '15/10/2023',
+    setor: 'Financeiro',
   },
 ];
 
