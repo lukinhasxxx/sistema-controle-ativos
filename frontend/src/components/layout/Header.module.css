@@ -14,10 +14,20 @@
   color: var(--text-main);
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .userProfile {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 6px 16px 6px 6px;
+  background-color: #f8f9fa;
+  border-radius: 30px;
+  border: 1px solid var(--border-color);
 }
 
 .avatar {
@@ -31,41 +41,7 @@
   align-items: center;
   font-weight: 600;
   font-size: 1.1rem;
-}
-
-.userName {.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 2rem;
-  background-color: var(--white);
-  border-bottom: 1px solid var(--border-color);
-  margin-bottom: 2rem;
-}
-
-.title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-main);
-}
-
-.userProfile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: var(--primary-color);
-  color: var(--white);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 600;
-  font-size: 1.1rem;
+  flex-shrink: 0;
 }
 
 .userName {
@@ -73,6 +49,20 @@
   color: var(--text-main);
 }
 
-  font-weight: 500;
-  color: var(--text-main);
+.logoutBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.logoutBtn:hover {
+  background-color: var(--status-maintenance-bg);
+  color: var(--status-maintenance-text);
 }

@@ -37,19 +37,14 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <h1 className={styles.title}>Controle de Ativos</h1>
-      <div className={styles.userProfile}>
-        <div className={styles.avatar}>{initial}</div>
-        <span className={styles.userName}>{displayName}</span>
+      <div className={styles.headerActions}>
+        <div className={styles.userProfile}>
+          <div className={styles.avatar}>{initial}</div>
+          <span className={styles.userName}>{displayName}</span>
+        </div>
         <button
           onClick={handleLogout}
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            display: 'flex',
-            marginLeft: '8px',
-            color: 'var(--text-muted)',
-          }}
+          className={styles.logoutBtn}
           title="Sair"
         >
           <LogOut size={20} />

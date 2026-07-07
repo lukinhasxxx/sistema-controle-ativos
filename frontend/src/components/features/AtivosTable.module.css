@@ -3,7 +3,7 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border-color);
-  overflow: hidden;
+  overflow-x: auto;
 }
 
 .table {
@@ -155,9 +155,6 @@
 .sortableHeader {
   cursor: pointer;
   user-select: none;
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 
 .sortableHeader:hover {
@@ -167,6 +164,8 @@
 .sortIcon {
   color: var(--text-muted);
   transition: color 0.15s;
+  vertical-align: middle;
+  margin-left: 4px;
 }
 
 .sortIconActive {
@@ -179,6 +178,7 @@
 
 .mobileSortControls {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
 }

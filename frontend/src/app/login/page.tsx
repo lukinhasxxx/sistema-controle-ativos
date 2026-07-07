@@ -39,13 +39,13 @@ export default function Login() {
       <div className={styles.card}>
         <div className={styles.logoContainer}>
           <div className={styles.logoIcon}></div>
-          <span className={styles.logoText}>CEJAM</span>
+          <span className={styles.logoText}>Afonso teste</span>
         </div>
         <h2 className={styles.title}>Acesse sua conta</h2>
         <form onSubmit={handleLogin} className={styles.form}>
           <div className={styles.formGroup}>
             <label>E-mail</label>
-            <input type="email" className={styles.input} required defaultValue="admin@cejam.org.br" />
+            <input type="email" className={styles.input} required defaultValue="admin@afonso.org.br" />
           </div>
           <div className={styles.formGroup}>
             <label>Senha</label>
@@ -56,7 +56,7 @@ export default function Login() {
             <Button type="button" variant="secondary" className={styles.registerBtn} onClick={() => setIsRegisterModalOpen(true)}>Cadastrar</Button>
           </div>
         </form>
-        
+
         <footer className={styles.footer}>
           <p>Siga-nos nas redes sociais:</p>
           <div className={styles.socialIcons}>
@@ -68,8 +68,8 @@ export default function Login() {
         </footer>
       </div>
 
-      <Modal 
-        isOpen={isRegisterModalOpen} 
+      <Modal
+        isOpen={isRegisterModalOpen}
         onClose={() => setIsRegisterModalOpen(false)}
         title="Cadastrar Funcionário"
       >
@@ -94,10 +94,10 @@ export default function Login() {
           </div>
           <div className={styles.formGroup}>
             <label>CPF (apenas números)</label>
-            <input 
-              type="text" 
-              className={styles.input} 
-              required 
+            <input
+              type="text"
+              className={styles.input}
+              required
               maxLength={11}
               value={cpf}
               onChange={(e) => setCpf(e.target.value)}

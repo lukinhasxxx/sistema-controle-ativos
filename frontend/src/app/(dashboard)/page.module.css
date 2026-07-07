@@ -1,20 +1,8 @@
 .kpiGrid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
-}
-
-@media (max-width: 1024px) {
-  .kpiGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .kpiGrid {
-    grid-template-columns: 1fr;
-  }
 }
 
 .pageHeader {
@@ -24,24 +12,72 @@
   margin-bottom: 2rem;
 }
 
+@media (max-width: 768px) {
+  .pageHeader {
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.25rem;
+  }
+
+  .abas {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .abaBtn {
+    flex: 1;
+    font-size: 1.05rem;
+    padding: 0.6rem;
+  }
+
+  .pageHeader>button {
+    width: 70%;
+    max-width: 350px;
+    font-size: 1.05rem;
+    padding: 0.70rem;
+  }
+}
+
 .abas {
   display: flex;
+  position: relative;
   gap: 0.5rem;
   background-color: #f1f3f5;
   border-radius: var(--radius-md);
   padding: 4px;
 }
 
+.abaBg {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 6px);
+  background-color: var(--white);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.slideRight {
+  transform: translateX(calc(100% + 8px));
+}
+
 .abaBtn {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-width: 140px;
   padding: 0.4rem 1.1rem;
   border: none;
   background: transparent;
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.2s;
 }
 
 .abaBtn:hover {
@@ -49,14 +85,13 @@
 }
 
 .abaAtiva {
-  background-color: var(--white);
   color: var(--primary-color);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  font-weight: 600;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .spinner {
@@ -74,7 +109,7 @@
   gap: 1rem;
 }
 
-.formRow > * {
+.formRow>* {
   flex: 1;
 }
 
