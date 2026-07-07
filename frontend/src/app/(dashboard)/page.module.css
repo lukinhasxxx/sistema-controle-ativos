@@ -106,16 +106,19 @@
 
 .formRow {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
 .formRow>* {
-  flex: 1;
+  flex: 1 1 140px;
+  min-width: 140px;
 }
 
 .formGroup {
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   gap: 0.5rem;
 }
 
