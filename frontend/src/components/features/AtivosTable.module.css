@@ -64,6 +64,11 @@
   color: var(--status-maintenance-text);
 }
 
+.statusStock {
+  background-color: #e8eaf6;
+  color: #3949ab;
+}
+
 .actionsHeader {
   text-align: right;
 }
@@ -161,6 +166,11 @@
 
 .sortIcon {
   color: var(--text-muted);
+  transition: color 0.15s;
+}
+
+.sortIconActive {
+  color: var(--primary-color);
 }
 
 .sortableHeader:hover .sortIcon {
