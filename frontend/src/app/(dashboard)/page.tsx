@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { Plus, AlertCircle, LayoutGrid, Package, Monitor, Loader2 } from 'lucide-react';
-import { IAtivo } from '../../types';
+import { IAtivo, StatusAtivo } from '../../types';
 import {
   getAtivos,
   cadastrarAtivo,
@@ -49,6 +49,7 @@ export default function Dashboard() {
   // Aba ativa — controlada pela Sidebar via prop ou (futuramente) context
   // Por ora lemos de um estado interno; a Sidebar passará o valor via URL ou prop
   const [abaAtiva, setAbaAtiva] = useState<AbaAtiva>('inventario');
+  const [filtroStatus, setFiltroStatus] = useState<StatusAtivo | null>(null);
 
   const [selectedAtivo, setSelectedAtivo] = useState<IAtivo | null>(null);
 
@@ -84,19 +85,28 @@ export default function Dashboard() {
   }, [fetchAtivosEUsuarios]);
 
   // ── Filtro por setor (Regra de Negócio Crítica) ─────────────────────────────
-  const ativos: IAtivo[] = (() => {
+  const ativosPorSetor: IAtivo[] = (() => {
     if (abaAtiva === 'todos') return todosAtivos;
     const usuario = getUsuarioLogado();
     if (!usuario) return todosAtivos;
     return todosAtivos.filter((a) => a.setor === usuario.setor);
   })();
 
-  // ── KPIs — calculados sobre a lista exibida ─────────────────────────────────
-  const total = ativos.length;
-  const disponiveis = ativos.filter((a) => a.status === 'Disponível').length;
-  const emUso = ativos.filter((a) => a.status === 'Em Uso').length;
-  const manutencao = ativos.filter((a) => a.status === 'Manutenção').length;
-  const estoque = ativos.filter((a) => a.status === 'Estoque').length;
+  // ── KPIs — calculados sobre a lista do setor (sem filtro de status aplicado)
+  const total = ativosPorSetor.length;
+  const disponiveis = ativosPorSetor.filter((a) => a.status === 'Disponível').length;
+  const emUso = ativosPorSetor.filter((a) => a.status === 'Em Uso').length;
+  const manutencao = ativosPorSetor.filter((a) => a.status === 'Manutenção').length;
+  const estoque = ativosPorSetor.filter((a) => a.status === 'Estoque').length;
+
+  // ── Lista final exibida na tabela (com filtro de status, se houver)
+  const ativos = filtroStatus 
+    ? ativosPorSetor.filter((a) => a.status === filtroStatus)
+    : ativosPorSetor;
+
+  const handleKpiClick = (status: StatusAtivo | null) => {
+    setFiltroStatus(prev => prev === status ? null : status);
+  };
 
   // ── Handlers ────────────────────────────────────────────────────────────────
   const handleCadastrar = async (e: React.FormEvent) => {
@@ -222,11 +232,46 @@ export default function Dashboard() {
       </div>
 
       <div className={styles.kpiGrid}>
-        <KpiCard title="Total de Ativos:" value={total} icon={<LayoutGrid size={24} />} colorType="total" />
-        <KpiCard title="Disponíveis:" value={disponiveis} icon={<Package size={24} />} colorType="available" />
-        <KpiCard title="Em Uso:" value={emUso} icon={<Monitor size={24} />} colorType="inUse" />
-        <KpiCard title="Manutenção:" value={manutencao} icon={<AlertCircle size={24} />} colorType="maintenance" />
-        <KpiCard title="Estoque:" value={estoque} icon={<Package size={24} />} colorType="available" />
+        <KpiCard 
+          title="Total de Ativos:" 
+          value={total} 
+          icon={<LayoutGrid size={24} />} 
+          colorType="total" 
+          isActive={filtroStatus === null}
+          onClick={() => handleKpiClick(null)}
+        />
+        <KpiCard 
+          title="Disponíveis:" 
+          value={disponiveis} 
+          icon={<Package size={24} />} 
+          colorType="available" 
+          isActive={filtroStatus === 'Disponível'}
+          onClick={() => handleKpiClick('Disponível')}
+        />
+        <KpiCard 
+          title="Em Uso:" 
+          value={emUso} 
+          icon={<Monitor size={24} />} 
+          colorType="inUse" 
+          isActive={filtroStatus === 'Em Uso'}
+          onClick={() => handleKpiClick('Em Uso')}
+        />
+        <KpiCard 
+          title="Manutenção:" 
+          value={manutencao} 
+          icon={<AlertCircle size={24} />} 
+          colorType="maintenance" 
+          isActive={filtroStatus === 'Manutenção'}
+          onClick={() => handleKpiClick('Manutenção')}
+        />
+        <KpiCard 
+          title="Estoque:" 
+          value={estoque} 
+          icon={<Package size={24} />} 
+          colorType="available" 
+          isActive={filtroStatus === 'Estoque'}
+          onClick={() => handleKpiClick('Estoque')}
+        />
       </div>
 
       {isLoading ? (

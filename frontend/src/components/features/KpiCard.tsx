@@ -6,11 +6,16 @@ interface KpiCardProps {
   value: number;
   icon: React.ReactNode;
   colorType: 'total' | 'available' | 'inUse' | 'maintenance';
+  isActive?: boolean;
+  onClick?: () => void;
 }
 
-const KpiCard: React.FC<KpiCardProps> = ({ title, value, icon, colorType }) => {
+const KpiCard: React.FC<KpiCardProps> = ({ title, value, icon, colorType, isActive = false, onClick }) => {
   return (
-    <div className={styles.card}>
+    <div 
+      className={`${styles.card} ${isActive ? styles.active : ''} ${onClick ? styles.clickable : ''}`}
+      onClick={onClick}
+    >
       <div className={`${styles.iconWrapper} ${styles[`icon-${colorType}`]}`}>
         {icon}
       </div>
