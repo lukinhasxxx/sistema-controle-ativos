@@ -45,6 +45,7 @@
   background-color: #e2e8f0;
   border-radius: var(--radius-md);
   padding: 4px;
+  box-shadow: 5px 3px 5px #8c8c8c;
 }
 
 .abaBg {
@@ -55,8 +56,8 @@
   width: calc(50% - 6px);
   background-color: var(--white);
   border-radius: var(--radius-sm);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
   z-index: 1;
 }
 
@@ -72,11 +73,11 @@
   border: none;
   background: transparent;
   border-radius: var(--radius-sm);
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color 0.2s, box-shadow 0.3s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -84,7 +85,8 @@
 
 .abaBtn:hover {
   color: var(--text-main);
-  background-color: rgba(0, 0, 0, 0.06);
+  background-color: rgba(0, 0, 0, 0.03);
+  box-shadow: 1px 1px 11px #0200f836;
 }
 
 .abaAtiva {
@@ -192,10 +194,12 @@
   .emptyState h3 {
     font-size: 0.95rem;
   }
-  
+
   .emptyStateBtn {
-    width: 8rem !important;      /* ~128px */
-    height: 2.5rem !important;   /* 40px */
+    width: 8rem !important;
+    /* ~128px */
+    height: 2.5rem !important;
+    /* 40px */
     font-size: 0.8rem !important;
     padding: 0 !important;
   }

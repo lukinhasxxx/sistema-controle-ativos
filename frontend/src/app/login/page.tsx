@@ -41,7 +41,7 @@ export default function Login() {
     <div className={styles.container}>
       <div className={styles.card}>
         <div className={styles.logoContainer}>
-          <Image src={logoCejam} alt="CEJAM Logo" className={styles.logoImage} />
+          <Image src={logoCejam} alt="CEJAM Logo" className={styles.logoImage} priority />
         </div>
         <h2 className={styles.title}>Acesse sua conta</h2>
         <form onSubmit={handleLogin} className={styles.form}>

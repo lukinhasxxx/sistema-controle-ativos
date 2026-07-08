@@ -13,12 +13,12 @@
 }
 
 .table th {
-  background-color: #f8f9fa;
+  background-color: #457db6;
   padding: 1rem 1.5rem;
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--white);
   font-size: 0.85rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: none;
 }
 
 .table td {
@@ -163,7 +163,7 @@
 }
 
 .sortIcon {
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.5);
   transition: color 0.15s;
   vertical-align: middle;
   margin-left: 4px;

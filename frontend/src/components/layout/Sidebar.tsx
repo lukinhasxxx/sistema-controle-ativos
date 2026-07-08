@@ -14,9 +14,10 @@ const Sidebar = () => {
     <aside
       className={`${styles.sidebar} ${isExpanded ? styles.expanded : ''}`}
       onMouseEnter={() => setIsExpanded(true)}
+      onMouseLeave={() => setIsExpanded(false)}
     >
       <div className={styles.logoContainer}>
-        <Image src={logoCejam} alt="CEJAM Logo" className={styles.logoImage} />
+        <Image src={logoCejam} alt="CEJAM Logo" className={styles.logoImage} priority />
       </div>
       <nav className={styles.nav}>
         <Link href="/" className={`${styles.navItem} ${styles.active}`}>

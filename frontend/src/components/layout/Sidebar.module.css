@@ -1,6 +1,6 @@
 .sidebar {
   width: 250px;
-  background-color: var(--dark-bg);
+  background: linear-gradient(139deg, #15C7CB 0%, #162b47 100%);
   height: 100vh;
   position: fixed;
   left: 0;
@@ -47,15 +47,16 @@
 }
 
 .navItem:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .active {
-  background-color: var(--secondary-color);
+  background-color: var(--white);
+  color: var(--dark-bg);
 }
 
 .active:hover {
-  background-color: var(--secondary-color);
+  background-color: var(--white);
 }
 
 /* Botão de colapso — escondido por padrão */
@@ -124,7 +125,7 @@
     height: 90px;
     margin: 0;
   }
-  
+
   .expanded .navItem span {
     display: inline;
   }
@@ -135,7 +136,6 @@
   }
 
   .expanded .logoContainer {
-    justify-content: flex-start;
     padding: 2rem 1.5rem;
   }
 
@@ -144,4 +144,3 @@
     margin-right: 1rem;
   }
 }
-
