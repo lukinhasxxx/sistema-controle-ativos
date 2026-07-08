@@ -9,6 +9,7 @@ export interface IAtivo {
   responsavel: string | null;
   setor: string;
   codigoIdentificacao: string;
+  isExcluido?: boolean;
 }
 
 export interface IUsuario {

@@ -105,9 +105,16 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
         </thead>
         <tbody>
           {sortedAtivos.map((ativo) => (
-            <tr key={ativo.id}>
-              <td>{ativo.codigo}</td>
-              <td className={styles.equipamento}>{ativo.equipamento}</td>
+            <tr key={ativo.id} style={{ opacity: ativo.isExcluido ? 0.6 : 1, backgroundColor: ativo.isExcluido ? '#fef2f2' : 'transparent' }}>
+              <td>
+                {ativo.codigo}
+                {ativo.isExcluido && (
+                  <span style={{ marginLeft: 8, fontSize: '0.7rem', background: '#e53e3e', color: 'white', padding: '2px 6px', borderRadius: 4 }}>
+                    Excluído
+                  </span>
+                )}
+              </td>
+              <td className={styles.equipamento} style={{ textDecoration: ativo.isExcluido ? 'line-through' : 'none' }}>{ativo.equipamento}</td>
               <td>{ativo.categoria}</td>
               <td>
                 <span className={`${styles.statusBadge} ${getStatusClass(ativo.status)}`}>
@@ -122,6 +129,8 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
                     onClick={() => onEmprestimo(ativo)}
                     title="Empréstimo"
                     className={styles.actionBtn}
+                    disabled={ativo.isExcluido}
+                    style={ativo.isExcluido ? { opacity: 0.4, cursor: 'not-allowed' } : {}}
                   >
                     <Handshake size={18} />
                   </button>
@@ -129,8 +138,8 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
                     onClick={() => onDevolucao(ativo)}
                     title="Devolução"
                     className={styles.actionBtn}
-                    disabled={ativo.status !== 'Em Uso'}
-                    style={ativo.status !== 'Em Uso' ? { opacity: 0.4, cursor: 'not-allowed' } : {}}
+                    disabled={ativo.status !== 'Em Uso' || ativo.isExcluido}
+                    style={(ativo.status !== 'Em Uso' || ativo.isExcluido) ? { opacity: 0.4, cursor: 'not-allowed' } : {}}
                   >
                     <CornerUpLeft size={18} />
                   </button>
@@ -138,6 +147,8 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
                     onClick={() => onEditar(ativo)}
                     title="Editar"
                     className={styles.actionBtn}
+                    disabled={ativo.isExcluido}
+                    style={ativo.isExcluido ? { opacity: 0.4, cursor: 'not-allowed' } : {}}
                   >
                     <Pencil size={18} />
                   </button>
@@ -145,6 +156,8 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
                     onClick={() => onExcluir(ativo)}
                     title="Excluir"
                     className={`${styles.actionBtn} ${styles.dangerBtn}`}
+                    disabled={ativo.isExcluido}
+                    style={ativo.isExcluido ? { opacity: 0.4, cursor: 'not-allowed' } : {}}
                   >
                     <Trash size={18} />
                   </button>

@@ -4,11 +4,14 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { LayoutDashboard, Folder, Handshake, ChevronLeft } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import styles from './Sidebar.module.css';
 import logoCejam from '../../assets/logos/cejamLogon.png';
 
 const Sidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const searchParams = useSearchParams();
+  const view = searchParams.get('view') || 'inventario';
 
   return (
     <aside
@@ -20,15 +23,15 @@ const Sidebar = () => {
         <Image src={logoCejam} alt="CEJAM Logo" className={styles.logoImage} priority />
       </div>
       <nav className={styles.nav}>
-        <Link href="/" className={`${styles.navItem} ${styles.active}`}>
+        <Link href="/" className={`${styles.navItem} ${view === 'inventario' ? styles.active : ''}`}>
           <LayoutDashboard size={20} />
           <span>Inventário</span>
         </Link>
-        <Link href="/" className={styles.navItem}>
+        <Link href="/?view=todos-ativos" className={`${styles.navItem} ${view === 'todos-ativos' ? styles.active : ''}`}>
           <Folder size={20} />
           <span>Todos os ativos</span>
         </Link>
-        <Link href="/" className={styles.navItem}>
+        <Link href="/?view=emprestimos" className={`${styles.navItem} ${view === 'emprestimos' ? styles.active : ''}`}>
           <Handshake size={20} />
           <span>Empréstimos</span>
         </Link>

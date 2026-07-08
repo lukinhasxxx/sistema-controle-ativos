@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { Plus, AlertCircle, LayoutGrid, Package, Monitor, Loader2 } from 'lucide-react';
 import { IAtivo, StatusAtivo } from '../../types';
@@ -22,7 +23,7 @@ import styles from './page.module.css';
 // ──────────────────────────────────────────────────────────────────────────────
 // Tipos locais
 // ──────────────────────────────────────────────────────────────────────────────
-type AbaAtiva = 'inventario' | 'todos';
+type ViewMode = 'inventario' | 'todos-ativos' | 'emprestimos';
 
 interface UsuarioLogado {
   id: string;
@@ -47,9 +48,9 @@ export default function Dashboard() {
   const [usuarios, setUsuarios] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Aba ativa — controlada pela Sidebar via prop ou (futuramente) context
-  // Por ora lemos de um estado interno; a Sidebar passará o valor via URL ou prop
-  const [abaAtiva, setAbaAtiva] = useState<AbaAtiva>('inventario');
+  const searchParams = useSearchParams();
+  const view = (searchParams.get('view') as ViewMode) || 'inventario';
+
   const [filtroStatus, setFiltroStatus] = useState<StatusAtivo | null>(null);
 
   const [selectedAtivo, setSelectedAtivo] = useState<IAtivo | null>(null);
@@ -70,8 +71,9 @@ export default function Dashboard() {
   const fetchAtivosEUsuarios = useCallback(async () => {
     setIsLoading(true);
     try {
+      // Sempre busca com excluídos, filtramos no frontend baseado na view
       const [ativosData, usuariosData] = await Promise.all([
-        getAtivos(),
+        getAtivos(true),
         getUsuarios(),
       ]);
       setTodosAtivos(ativosData);
@@ -87,25 +89,34 @@ export default function Dashboard() {
     fetchAtivosEUsuarios();
   }, [fetchAtivosEUsuarios]);
 
-  // ── Filtro por setor (Regra de Negócio Crítica) ─────────────────────────────
-  const ativosPorSetor: IAtivo[] = (() => {
-    if (abaAtiva === 'todos') return todosAtivos;
+  // ── Filtro por View e Setor ─────────────────────────────────────────────────
+  const ativosFiltradosPorView: IAtivo[] = (() => {
     const usuario = getUsuarioLogado();
-    if (!usuario) return todosAtivos;
-    return todosAtivos.filter((a) => a.setor === usuario.setor);
+    
+    if (view === 'todos-ativos') {
+      return todosAtivos;
+    } 
+    
+    if (view === 'emprestimos') {
+      return todosAtivos.filter(a => a.status === 'Em Uso' && !a.isExcluido);
+    }
+    
+    // view === 'inventario' (default)
+    if (!usuario) return todosAtivos.filter(a => !a.isExcluido);
+    return todosAtivos.filter((a) => a.setor === usuario.setor && !a.isExcluido);
   })();
 
-  // ── KPIs — calculados sobre a lista do setor (sem filtro de status aplicado)
-  const total = ativosPorSetor.length;
-  const disponiveis = ativosPorSetor.filter((a) => a.status === 'Disponível').length;
-  const emUso = ativosPorSetor.filter((a) => a.status === 'Em Uso').length;
-  const manutencao = ativosPorSetor.filter((a) => a.status === 'Manutenção').length;
-  const estoque = ativosPorSetor.filter((a) => a.status === 'Estoque').length;
+  // ── KPIs — calculados sobre a lista filtrada pela view (sem filtro de status aplicado)
+  const total = ativosFiltradosPorView.length;
+  const disponiveis = ativosFiltradosPorView.filter((a) => a.status === 'Disponível').length;
+  const emUso = ativosFiltradosPorView.filter((a) => a.status === 'Em Uso').length;
+  const manutencao = ativosFiltradosPorView.filter((a) => a.status === 'Manutenção').length;
+  const estoque = ativosFiltradosPorView.filter((a) => a.status === 'Estoque').length;
 
   // ── Lista final exibida na tabela (com filtro de status, se houver)
   const ativos = filtroStatus 
-    ? ativosPorSetor.filter((a) => a.status === filtroStatus)
-    : ativosPorSetor;
+    ? ativosFiltradosPorView.filter((a) => a.status === filtroStatus)
+    : ativosFiltradosPorView;
 
   const handleKpiClick = (status: StatusAtivo | null) => {
     setFiltroStatus(prev => prev === status ? null : status);
@@ -232,23 +243,12 @@ export default function Dashboard() {
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <div>
-      {/* Seletor de aba (substituirá link da Sidebar quando houver contexto) */}
       <div className={styles.pageHeader}>
-        <div className={styles.abas}>
-          <div className={`${styles.abaBg} ${abaAtiva === 'todos' ? styles.slideRight : ''}`} />
-          <button
-            className={`${styles.abaBtn} ${abaAtiva === 'inventario' ? styles.abaAtiva : ''}`}
-            onClick={() => setAbaAtiva('inventario')}
-          >
-            Meu setor
-          </button>
-          <button
-            className={`${styles.abaBtn} ${abaAtiva === 'todos' ? styles.abaAtiva : ''}`}
-            onClick={() => setAbaAtiva('todos')}
-          >
-            Todos os Setores
-          </button>
-        </div>
+        <h2>
+          {view === 'inventario' && 'Inventário do Setor'}
+          {view === 'todos-ativos' && 'Todos os Ativos (Geral)'}
+          {view === 'emprestimos' && 'Ativos Emprestados'}
+        </h2>
         <Button
           onClick={() => setIsCadastrarModalOpen(true)}
           icon={<Plus size={18} />}
