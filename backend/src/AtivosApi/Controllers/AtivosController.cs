@@ -50,7 +50,7 @@ public class AtivosController : ControllerBase
         }
         catch (DbUpdateException)
         {
-            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores unicos nao estao duplicados." });
+            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores únicos nao estao duplicados." });
         }
         catch (Exception ex)
         {
@@ -111,7 +111,7 @@ public class AtivosController : ControllerBase
         }
         catch (DbUpdateException)
         {
-            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores unicos nao estao duplicados." });
+            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores únicos nao estao duplicados." });
         }
         catch (KeyNotFoundException ex)
         {
@@ -141,7 +141,7 @@ public class AtivosController : ControllerBase
         }
         catch (DbUpdateException)
         {
-            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores unicos nao estao duplicados." });
+            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores únicos nao estao duplicados." });
         }
         catch (KeyNotFoundException ex)
         {
@@ -174,7 +174,7 @@ public class AtivosController : ControllerBase
         }
         catch (DbUpdateException)
         {
-            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores unicos nao estao duplicados." });
+            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores únicos nao estao duplicados." });
         }
     }
 }

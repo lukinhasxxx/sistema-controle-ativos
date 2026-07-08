@@ -3,12 +3,16 @@ using Microsoft.OpenApi.Models;
 using AtivosApi.Infrastructure.Data;
 using AtivosApi.Domain.Interfaces;
 using AtivosApi.Domain.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ===================== SERVICES =====================
 
 builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddEndpointsApiExplorer();
 
 // Swagger com documentação enriquecida
