@@ -1,0 +1,76 @@
+.card {
+  background-color: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 1px 1px 11px #0200f836;
+  border: 1px solid var(--border-color);
+  height: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 1px 1px 11px #0200f896;
+}
+
+.iconWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-total {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+.icon-available {
+  background-color: var(--status-available-bg);
+  color: var(--status-available-text);
+}
+
+.icon-inUse {
+  background-color: var(--status-in-use-bg);
+  color: var(--status-in-use-text);
+}
+
+.icon-maintenance {
+  background-color: var(--status-maintenance-bg);
+  color: var(--status-maintenance-text);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.text-available {
+  color: var(--status-available-text);
+}
+
+.text-inUse {
+  color: var(--status-in-use-text);
+}
+
+.text-maintenance {
+  color: var(--status-maintenance-text);
+}

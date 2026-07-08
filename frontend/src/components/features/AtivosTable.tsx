@@ -1,0 +1,205 @@
+import React, { useState } from 'react';
+import { Handshake, CornerUpLeft, Pencil, Trash, ArrowUpDown } from 'lucide-react';
+import { IAtivo } from '../../types';
+import styles from './AtivosTable.module.css';
+
+interface AtivosTableProps {
+  ativos: IAtivo[];
+  onEmprestimo: (ativo: IAtivo) => void;
+  onDevolucao: (ativo: IAtivo) => void;
+  onEditar: (ativo: IAtivo) => void;
+  onExcluir: (ativo: IAtivo) => void;
+}
+
+// Colunas que suportam ordenação
+type SortField = 'categoria' | 'status' | 'setor' | null;
+type SortOrder = 'asc' | 'desc';
+
+const getStatusClass = (status: string) => {
+  switch (status) {
+    case 'Disponível':  return styles.statusAvailable;
+    case 'Em Uso':      return styles.statusInUse;
+    case 'Manutenção':  return styles.statusMaintenance;
+    case 'Estoque':     return styles.statusStock;
+    default:            return '';
+  }
+};
+
+const AtivosTable: React.FC<AtivosTableProps> = ({
+  ativos,
+  onEmprestimo,
+  onDevolucao,
+  onEditar,
+  onExcluir,
+}) => {
+  const [sortField, setSortField] = useState<SortField>(null);
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+
+  // ── Lógica de ordenação ────────────────────────────────────────────────────
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+  };
+
+  const sortedAtivos = [...ativos].sort((a, b) => {
+    if (!sortField) return 0;
+
+    const valueA = (a[sortField] ?? '') as string;
+    const valueB = (b[sortField] ?? '') as string;
+
+    if (valueA < valueB) return sortOrder === 'asc' ? -1 : 1;
+    if (valueA > valueB) return sortOrder === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  // ── Helper: ícone de seta com indicação visual do campo ativo ──────────────
+  const SortIcon = ({ field }: { field: SortField }) => (
+    <ArrowUpDown
+      size={14}
+      className={`${styles.sortIcon} ${sortField === field ? styles.sortIconActive : ''}`}
+    />
+  );
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+  return (
+    <div className={styles.container}>
+      {/* ── Tabela — desktop ───────────────────────────────────────────────── */}
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Equipamento</th>
+
+            {/* Categoria — sortável */}
+            <th
+              className={styles.sortableHeader}
+              onClick={() => handleSort('categoria')}
+            >
+              Categoria <SortIcon field="categoria" />
+            </th>
+
+            {/* Status — sortável */}
+            <th
+              className={styles.sortableHeader}
+              onClick={() => handleSort('status')}
+            >
+              Status <SortIcon field="status" />
+            </th>
+
+            <th>Responsável</th>
+
+            {/* Setor — sortável */}
+            <th
+              className={styles.sortableHeader}
+              onClick={() => handleSort('setor')}
+            >
+              Setor <SortIcon field="setor" />
+            </th>
+
+            <th className={styles.actionsHeader}>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sortedAtivos.map((ativo) => (
+            <tr key={ativo.id}>
+              <td>{ativo.codigo}</td>
+              <td className={styles.equipamento}>{ativo.equipamento}</td>
+              <td>{ativo.categoria}</td>
+              <td>
+                <span className={`${styles.statusBadge} ${getStatusClass(ativo.status)}`}>
+                  {ativo.status}
+                </span>
+              </td>
+              <td>{ativo.responsavel || '—'}</td>
+              <td>{ativo.setor || '—'}</td>
+              <td>
+                <div className={styles.actions}>
+                  <button
+                    onClick={() => onEmprestimo(ativo)}
+                    title="Empréstimo"
+                    className={styles.actionBtn}
+                  >
+                    <Handshake size={18} />
+                  </button>
+                  <button
+                    onClick={() => onDevolucao(ativo)}
+                    title="Devolução"
+                    className={styles.actionBtn}
+                  >
+                    <CornerUpLeft size={18} />
+                  </button>
+                  <button
+                    onClick={() => onEditar(ativo)}
+                    title="Editar"
+                    className={styles.actionBtn}
+                  >
+                    <Pencil size={18} />
+                  </button>
+                  <button
+                    onClick={() => onExcluir(ativo)}
+                    title="Excluir"
+                    className={`${styles.actionBtn} ${styles.dangerBtn}`}
+                  >
+                    <Trash size={18} />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Cards — mobile ─────────────────────────────────────────────────── */}
+      <div className={styles.mobileList}>
+        <div className={styles.mobileSortControls}>
+          <button onClick={() => handleSort('categoria')} className={styles.sortBtn}>
+            Categoria <ArrowUpDown size={14} />
+          </button>
+          <button onClick={() => handleSort('status')} className={styles.sortBtn}>
+            Status <ArrowUpDown size={14} />
+          </button>
+          <button onClick={() => handleSort('setor')} className={styles.sortBtn}>
+            Setor <ArrowUpDown size={14} />
+          </button>
+        </div>
+
+        {sortedAtivos.map((ativo) => (
+          <div key={ativo.id} className={styles.mobileCard}>
+            <div className={styles.cardHeader}>
+              <span className={styles.cardCode}>{ativo.codigo}</span>
+              <span className={`${styles.statusBadge} ${getStatusClass(ativo.status)}`}>
+                {ativo.status}
+              </span>
+            </div>
+            <h3 className={styles.cardTitle}>{ativo.equipamento}</h3>
+            <div className={styles.cardDetails}>
+              <p><strong>Categoria:</strong> {ativo.categoria}</p>
+              <p><strong>Responsável:</strong> {ativo.responsavel || '—'}</p>
+              <p><strong>Setor:</strong> {ativo.setor || '—'}</p>
+            </div>
+            <div className={styles.cardActions}>
+              <button onClick={() => onEmprestimo(ativo)} className={styles.actionBtn}>
+                <Handshake size={18} />
+              </button>
+              <button onClick={() => onDevolucao(ativo)} className={styles.actionBtn}>
+                <CornerUpLeft size={18} />
+              </button>
+              <button onClick={() => onEditar(ativo)} className={styles.actionBtn}>
+                <Pencil size={18} />
+              </button>
+              <button onClick={() => onExcluir(ativo)} className={`${styles.actionBtn} ${styles.dangerBtn}`}>
+                <Trash size={18} />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default AtivosTable;

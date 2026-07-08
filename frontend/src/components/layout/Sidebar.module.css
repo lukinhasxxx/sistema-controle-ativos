@@ -1,0 +1,146 @@
+.sidebar {
+  width: 250px;
+  background: linear-gradient(139deg, #15C7CB 0%, #162b47 100%);
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+.logoContainer {
+  padding: 2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.logoImage {
+  width: auto;
+  height: 90px;
+  max-width: 100%;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem;
+  gap: 0.5rem;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.navItem:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.active {
+  background-color: var(--white);
+  color: var(--dark-bg);
+}
+
+.active:hover {
+  background-color: var(--white);
+}
+
+/* Botão de colapso — escondido por padrão */
+.collapseBtn {
+  display: none;
+}
+
+/* ── Mini Sidebar (abaixo de 570px) ─────────────────────────── */
+@media (max-width: 570px) {
+  .sidebar {
+    width: 80px;
+  }
+
+  /* Esconde a logo ou escala dependendo do que ficar melhor, aqui apenas ajustamos o tamanho pro mini */
+  .logoImage {
+    height: 24px;
+    margin: 0 auto;
+  }
+
+  .navItem span {
+    display: none;
+  }
+
+  /* Centraliza ícones */
+  .navItem {
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .logoContainer {
+    justify-content: center;
+    padding: 1.5rem 0;
+  }
+
+  /* Botão de colapso aparece no rodapé do sidebar */
+  .collapseBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
+    margin-bottom: 1.5rem;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    align-self: center;
+  }
+
+  .collapseBtn:hover {
+    color: var(--white);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Quando expandido por hover: flutua por cima do conteúdo */
+  .expanded {
+    width: 250px;
+    position: fixed;
+    z-index: 100;
+  }
+
+  /* Mostra textos e botão quando expandido */
+  .expanded .logoImage {
+    height: 90px;
+    margin: 0;
+  }
+
+  .expanded .navItem span {
+    display: inline;
+  }
+
+  .expanded .navItem {
+    justify-content: flex-start;
+    padding: 12px 16px;
+  }
+
+  .expanded .logoContainer {
+    padding: 2rem 1.5rem;
+  }
+
+  .expanded .collapseBtn {
+    align-self: flex-end;
+    margin-right: 1rem;
+  }
+}
