@@ -8,6 +8,7 @@ export interface IAtivo {
   status: StatusAtivo;
   responsavel: string | null;
   setor: string;
+  codigoIdentificacao: string;
 }
 
 export interface IUsuario {
