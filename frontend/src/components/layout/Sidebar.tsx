@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { LayoutDashboard, Folder, Handshake, ChevronLeft } from 'lucide-react';
@@ -8,7 +8,7 @@ import { useSearchParams } from 'next/navigation';
 import styles from './Sidebar.module.css';
 import logoCejam from '../../assets/logos/cejamLogon.png';
 
-const Sidebar = () => {
+const SidebarContent = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const searchParams = useSearchParams();
   const view = searchParams.get('view') || 'inventario';
@@ -44,6 +44,14 @@ const Sidebar = () => {
         <ChevronLeft size={20} />
       </button>
     </aside>
+  );
+};
+
+const Sidebar = () => {
+  return (
+    <Suspense fallback={<aside className={styles.sidebar} />}>
+      <SidebarContent />
+    </Suspense>
   );
 };
 

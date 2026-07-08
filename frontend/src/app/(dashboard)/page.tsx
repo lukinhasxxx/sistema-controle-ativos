@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { Plus, AlertCircle, LayoutGrid, Package, Monitor, Loader2 } from 'lucide-react';
@@ -42,7 +42,7 @@ function getUsuarioLogado(): UsuarioLogado | null {
 // ──────────────────────────────────────────────────────────────────────────────
 // Componente
 // ──────────────────────────────────────────────────────────────────────────────
-export default function Dashboard() {
+function DashboardContent() {
   // Lista completa vinda da API
   const [todosAtivos, setTodosAtivos] = useState<IAtivo[]>([]);
   const [usuarios, setUsuarios] = useState<any[]>([]);
@@ -511,5 +511,13 @@ export default function Dashboard() {
         </form>
       </Modal>
     </div>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}><Loader2 className="animate-spin" size={32} /></div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }
