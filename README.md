@@ -23,7 +23,7 @@ As exigências incluíam:
 - **Frontend**: Uma SPA reativa construída com Next.js, React e TypeScript, focada em componentes reutilizáveis, gerenciamento de estado sem recarregar a página e design responsivo.
 - **Diferenciais Implementados**: Containerização da aplicação usando Docker e Docker Compose para facilitar a orquestração e execução local.
 
-## 🛠 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 **Backend:**
 - **.NET 8 (C#)**
