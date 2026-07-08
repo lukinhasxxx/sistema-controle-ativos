@@ -29,6 +29,21 @@ public record CadastrarAtivoRequest
     public Guid UsuarioCadastroId { get; init; }
 }
 
+public record EditarAtivoRequest
+{
+    /// <summary>
+    /// Descrição do equipamento.
+    /// </summary>
+    /// <example>Monitor Dell 24 polegadas</example>
+    public string Equipamento { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Categoria do ativo.
+    /// </summary>
+    /// <example>Monitor</example>
+    public string Categoria { get; init; } = string.Empty;
+}
+
 public record EmprestarAtivoRequest
 {
     /// <summary>

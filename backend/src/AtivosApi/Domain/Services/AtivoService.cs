@@ -34,6 +34,21 @@ public class AtivoService : IAtivoService
         return ToResponse(ativo);
     }
 
+    public async Task<AtivoResponse> EditarAtivoAsync(Guid id, EditarAtivoRequest request)
+    {
+        var ativo = await _context.Ativos.FindAsync(id);
+        
+        if (ativo == null || ativo.IsExcluido)
+            throw new Exception("Ativo não encontrado ou excluído.");
+
+        ativo.Equipamento = request.Equipamento;
+        ativo.Categoria = request.Categoria;
+
+        await _context.SaveChangesAsync();
+
+        return ToResponse(ativo);
+    }
+
     // ---------- Listar ----------
     public async Task<IEnumerable<AtivoResponse>> ListarAtivosAsync(bool incluirExcluidos = false)
     {

@@ -59,6 +59,36 @@ public class AtivosController : ControllerBase
     }
 
     /// <summary>
+    /// Edita um ativo existente.
+    /// </summary>
+    /// <param name="id">ID do ativo.</param>
+    /// <param name="request">Dados para edição.</param>
+    /// <returns>O ativo atualizado.</returns>
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(AtivoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Editar(Guid id, [FromBody] EditarAtivoRequest request)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            var ativo = await _ativoService.EditarAtivoAsync(id, request);
+            return Ok(ativo);
+        }
+        catch (Exception ex) when (ex.Message.Contains("não encontrado"))
+        {
+            return NotFound(new { mensagem = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { mensagem = ex.Message });
+        }
+    }
+
+    /// <summary>
     /// Realiza o empréstimo de um ativo para um responsável.
     /// Valida se o ativo está Disponível antes de processar.
     /// </summary>

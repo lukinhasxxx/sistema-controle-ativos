@@ -7,6 +7,7 @@ import { IAtivo, StatusAtivo } from '../../types';
 import {
   getAtivos,
   cadastrarAtivo,
+  editarAtivo,
   emprestarAtivo,
   devolverAtivo,
   excluirAtivo,
@@ -56,12 +57,14 @@ export default function Dashboard() {
   // Form refs — evita criar state para cada campo do formulário
   const cadastrarFormRef = useRef<HTMLFormElement>(null);
   const emprestimoFormRef = useRef<HTMLFormElement>(null);
+  const editarFormRef = useRef<HTMLFormElement>(null);
 
   // Modal States
   const [isCadastrarModalOpen, setIsCadastrarModalOpen] = useState(false);
   const [isEmprestimoModalOpen, setIsEmprestimoModalOpen] = useState(false);
   const [isDevolucaoModalOpen, setIsDevolucaoModalOpen] = useState(false);
   const [isExcluirModalOpen, setIsExcluirModalOpen] = useState(false);
+  const [isEditarModalOpen, setIsEditarModalOpen] = useState(false);
 
   // ── Busca da API ────────────────────────────────────────────────────────────
   const fetchAtivosEUsuarios = useCallback(async () => {
@@ -158,6 +161,28 @@ export default function Dashboard() {
     }
   };
 
+  const handleEditar = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedAtivo) return;
+    const form = editarFormRef.current;
+    if (!form) return;
+
+    const payload = {
+      equipamento: (form.elements.namedItem('equipamento') as HTMLInputElement)?.value,
+      categoria: (form.elements.namedItem('categoria') as HTMLSelectElement)?.value,
+    };
+
+    try {
+      await editarAtivo(selectedAtivo.id, payload);
+      toast.success('Ativo editado com sucesso!');
+      setIsEditarModalOpen(false);
+      setSelectedAtivo(null);
+      fetchAtivosEUsuarios();
+    } catch (err) {
+      toast.error((err as Error).message || 'Erro ao editar ativo.');
+    }
+  };
+
   const handleDevolucao = async () => {
     if (!selectedAtivo) return;
     try {
@@ -199,8 +224,9 @@ export default function Dashboard() {
     setIsExcluirModalOpen(true);
   };
 
-  const openEditar = (_ativo: IAtivo) => {
-    toast('Função de editar em desenvolvimento', { icon: '🚧' });
+  const openEditar = (ativo: IAtivo) => {
+    setSelectedAtivo(ativo);
+    setIsEditarModalOpen(true);
   };
 
   // ── Render ──────────────────────────────────────────────────────────────────
@@ -442,6 +468,47 @@ export default function Dashboard() {
             </Button>
           </div>
         </div>
+      </Modal>
+
+      {/* ── Modal Editar ──────────────────────────────────────────────────── */}
+      <Modal
+        isOpen={isEditarModalOpen}
+        onClose={() => setIsEditarModalOpen(false)}
+        title="Editar Ativo"
+      >
+        <form ref={editarFormRef} onSubmit={handleEditar} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label>Nome do equipamento</label>
+            <input 
+              name="equipamento" 
+              type="text" 
+              className={styles.input} 
+              defaultValue={selectedAtivo?.equipamento}
+              required 
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Categoria</label>
+            <select 
+              name="categoria" 
+              className={styles.input} 
+              defaultValue={selectedAtivo?.categoria}
+              required
+            >
+              <option value="">Selecione...</option>
+              <option value="Monitor">Monitor</option>
+              <option value="Notebook">Notebook</option>
+              <option value="Periférico">Periférico</option>
+              <option value="Mobília">Mobília</option>
+            </select>
+          </div>
+          <div className={styles.modalActions}>
+            <Button type="button" variant="secondary" onClick={() => setIsEditarModalOpen(false)}>
+              Cancelar
+            </Button>
+            <Button type="submit">Salvar Alterações</Button>
+          </div>
+        </form>
       </Modal>
     </div>
   );
