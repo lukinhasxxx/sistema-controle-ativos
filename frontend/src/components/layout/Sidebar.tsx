@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { LayoutDashboard, Folder, Handshake, ChevronLeft } from 'lucide-react';
 import styles from './Sidebar.module.css';
+import logoCejam from '../../assets/logos/cejamLogon.png';
 
 const Sidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -14,8 +16,7 @@ const Sidebar = () => {
       onMouseEnter={() => setIsExpanded(true)}
     >
       <div className={styles.logoContainer}>
-        <div className={styles.logoIcon}></div>
-        <span className={styles.logoText}>CEJAM</span>
+        <Image src={logoCejam} alt="CEJAM Logo" className={styles.logoImage} />
       </div>
       <nav className={styles.nav}>
         <Link href="/" className={`${styles.navItem} ${styles.active}`}>

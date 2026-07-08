@@ -3,10 +3,13 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { AtSign, Globe, Link as LinkIcon, MessageCircle } from 'lucide-react';
+import { Globe, Link as LinkIcon, MessageCircle } from 'lucide-react';
+import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import Image from 'next/image';
 import Button from '../../components/common/Button';
 import Modal from '../../components/common/Modal';
 import styles from './login.module.css';
+import logoCejam from '../../assets/logos/cejamLogon.png';
 
 // Simple CPF Regex: 11 digits
 const CPF_REGEX = /^\d{11}$/;
@@ -38,8 +41,7 @@ export default function Login() {
     <div className={styles.container}>
       <div className={styles.card}>
         <div className={styles.logoContainer}>
-          <div className={styles.logoIcon}></div>
-          <span className={styles.logoText}>CEJAM</span>
+          <Image src={logoCejam} alt="CEJAM Logo" className={styles.logoImage} />
         </div>
         <h2 className={styles.title}>Acesse sua conta</h2>
         <form onSubmit={handleLogin} className={styles.form}>
@@ -60,10 +62,10 @@ export default function Login() {
         <footer className={styles.footer}>
           <p>Siga-nos nas redes sociais:</p>
           <div className={styles.socialIcons}>
-            <a href="#" aria-label="Facebook"><Globe size={20} /></a>
-            <a href="#" aria-label="Instagram"><MessageCircle size={20} /></a>
-            <a href="#" aria-label="LinkedIn"><LinkIcon size={20} /></a>
-            <a href="#" aria-label="YouTube"><AtSign size={20} /></a>
+            <a href="https://www.facebook.com/cejamoficial/?locale=pt_BR" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><FaFacebook size={20} /></a>
+            <a href="https://www.instagram.com/cejamoficial/" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><FaInstagram size={20} /></a>
+            <a href="https://br.linkedin.com/company/cejam" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer"><FaLinkedin size={20} /></a>
+            <a href="https://www.youtube.com/tvcejam" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><FaYoutube size={20} /></a>
           </div>
         </footer>
       </div>

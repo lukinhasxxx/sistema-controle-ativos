@@ -26,19 +26,11 @@
   color: var(--primary-color);
 }
 
-.logoIcon {
-  width: 32px;
-  height: 32px;
-  background-color: var(--primary-color);
-  border-radius: 4px;
-  position: relative;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-}
-
-.logoText {
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: 1px;
+.logoImage {
+  width: 100px;
+  height: 100px;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .title {
@@ -116,14 +108,16 @@
 
 .socialIcons a {
   color: var(--primary-color);
-  transition: color 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: color 0.2s ease, transform 0.2s ease;
+  transition-delay: 0s, 0.05s; /* Leve delay apenas para o transform */
 }
 
 .socialIcons a:hover {
   color: var(--secondary-color);
+  transform: scale(1.1);
 }
 
 .modalActions {

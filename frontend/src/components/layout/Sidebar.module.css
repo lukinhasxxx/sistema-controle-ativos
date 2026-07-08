@@ -16,24 +16,16 @@
   padding: 2rem 1.5rem;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
 }
 
-.logoIcon {
-  width: 24px;
-  height: 24px;
-  background-color: var(--secondary-color);
-  border-radius: 4px;
-  position: relative;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  flex-shrink: 0;
-}
-
-.logoText {
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  white-space: nowrap;
+.logoImage {
+  width: auto;
+  height: 90px;
+  max-width: 100%;
+  object-fit: contain;
+  margin: 0 auto;
 }
 
 .nav {
@@ -77,8 +69,12 @@
     width: 80px;
   }
 
-  /* Esconde textos */
-  .logoText,
+  /* Esconde a logo ou escala dependendo do que ficar melhor, aqui apenas ajustamos o tamanho pro mini */
+  .logoImage {
+    height: 24px;
+    margin: 0 auto;
+  }
+
   .navItem span {
     display: none;
   }
@@ -124,7 +120,11 @@
   }
 
   /* Mostra textos e botão quando expandido */
-  .expanded .logoText,
+  .expanded .logoImage {
+    height: 90px;
+    margin: 0;
+  }
+  
   .expanded .navItem span {
     display: inline;
   }
