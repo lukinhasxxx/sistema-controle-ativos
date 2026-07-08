@@ -22,7 +22,7 @@ public class UsuarioService : IUsuarioService
             NomeCompleto = request.NomeCompleto,
             Email = request.Email,
             Cpf = request.Cpf,
-            SenhaHash = request.Senha,
+            SenhaHash = BCrypt.Net.BCrypt.HashPassword(request.Senha),
             Setor = request.Setor
         };
 
@@ -39,5 +39,19 @@ public class UsuarioService : IUsuarioService
             .ToListAsync();
 
         return usuarios.Select(u => new UsuarioResponse(u.Id, u.NomeCompleto, u.Setor));
+    }
+
+    public async Task<UsuarioResponse?> LoginAsync(LoginRequest request)
+    {
+        var usuario = await _context.Usuarios
+            .FirstOrDefaultAsync(u => u.Email == request.Email);
+
+        if (usuario == null)
+            return null;
+
+        if (!BCrypt.Net.BCrypt.Verify(request.Senha, usuario.SenhaHash))
+            return null;
+
+        return new UsuarioResponse(usuario.Id, usuario.NomeCompleto, usuario.Setor);
     }
 }

@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { Globe, Link as LinkIcon, MessageCircle } from 'lucide-react';
 import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import Image from 'next/image';
 import Button from '../../components/common/Button';
 import Modal from '../../components/common/Modal';
+import { loginUsuario, cadastrarUsuario } from '../../services/api';
 import styles from './login.module.css';
 import logoCejam from '../../assets/logos/cejamLogon.png';
 
@@ -17,24 +17,71 @@ const CPF_REGEX = /^\d{11}$/;
 export default function Login() {
   const router = useRouter();
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const [cpf, setCpf] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  // Login form
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginSenha, setLoginSenha] = useState('');
+
+  // Register form
+  const [regNome, setRegNome] = useState('');
+  const [regEmail, setRegEmail] = useState('');
+  const [regSetor, setRegSetor] = useState('');
+  const [regCpf, setRegCpf] = useState('');
+  const [regSenha, setRegSenha] = useState('');
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem('usuarioLogado', JSON.stringify({ id: '11111111-1111-1111-1111-111111111111', setor: 'TI' }));
-    router.push('/');
+    setIsLoggingIn(true);
+    try {
+      const usuario = await loginUsuario(loginEmail, loginSenha);
+      localStorage.setItem(
+        'usuarioLogado',
+        JSON.stringify({
+          id: usuario.id,
+          nome: usuario.nomeCompleto,
+          setor: usuario.setor,
+        }),
+      );
+      document.cookie = 'isLoggedIn=true; path=/';
+      toast.success(`Bem-vindo, ${usuario.nomeCompleto}!`);
+      router.push('/');
+    } catch (err) {
+      toast.error((err as Error).message || 'Erro ao fazer login.');
+    } finally {
+      setIsLoggingIn(false);
+    }
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanCpf = cpf.replace(/\D/g, ''); // Remove non-digits
+    const cleanCpf = regCpf.replace(/\D/g, '');
     if (!CPF_REGEX.test(cleanCpf)) {
-      toast.error('CPF inválido ou não pertence a um funcionário');
+      toast.error('CPF inválido. Informe 11 dígitos numéricos.');
       return;
     }
-    toast.success('Cadastrado com sucesso');
-    setIsRegisterModalOpen(false);
-    setCpf('');
+    setIsRegistering(true);
+    try {
+      await cadastrarUsuario({
+        nomeCompleto: regNome,
+        email: regEmail,
+        cpf: cleanCpf,
+        senha: regSenha,
+        setor: regSetor,
+      });
+      toast.success('Cadastro realizado com sucesso!');
+      setIsRegisterModalOpen(false);
+      setRegNome('');
+      setRegEmail('');
+      setRegSetor('');
+      setRegCpf('');
+      setRegSenha('');
+    } catch (err) {
+      toast.error((err as Error).message || 'Erro ao cadastrar.');
+    } finally {
+      setIsRegistering(false);
+    }
   };
 
   return (
@@ -48,14 +95,28 @@ export default function Login() {
         <form onSubmit={handleLogin} className={styles.form}>
           <div className={styles.formGroup}>
             <label>E-mail</label>
-            <input type="email" className={styles.input} required defaultValue="admin@cejam.org.br" />
+            <input
+              type="email"
+              className={styles.input}
+              required
+              value={loginEmail}
+              onChange={(e) => setLoginEmail(e.target.value)}
+            />
           </div>
           <div className={styles.formGroup}>
             <label>Senha</label>
-            <input type="password" className={styles.input} required defaultValue="123456" />
+            <input
+              type="password"
+              className={styles.input}
+              required
+              value={loginSenha}
+              onChange={(e) => setLoginSenha(e.target.value)}
+            />
           </div>
           <div className={styles.actionGroup}>
-            <Button type="submit" className={styles.submitBtn}>Entrar</Button>
+            <Button type="submit" className={styles.submitBtn} disabled={isLoggingIn}>
+              {isLoggingIn ? 'Entrando...' : 'Entrar'}
+            </Button>
             <Button type="button" variant="secondary" className={styles.registerBtn} onClick={() => setIsRegisterModalOpen(true)}>Cadastrar</Button>
           </div>
         </form>
@@ -77,17 +138,17 @@ export default function Login() {
         title="Cadastrar Funcionário"
       >
         <form onSubmit={handleRegister} className={styles.form}>
-          <div className={styles.formGroup}>
+          <div className={styles.modalFormGroup}>
             <label>Nome Completo</label>
-            <input type="text" className={styles.input} required />
+            <input type="text" className={styles.input} required value={regNome} onChange={(e) => setRegNome(e.target.value)} />
           </div>
-          <div className={styles.formGroup}>
+          <div className={styles.modalFormGroup}>
             <label>E-mail</label>
-            <input type="email" className={styles.input} required />
+            <input type="email" className={styles.input} required value={regEmail} onChange={(e) => setRegEmail(e.target.value)} />
           </div>
-          <div className={styles.formGroup}>
+          <div className={styles.modalFormGroup}>
             <label>Setor</label>
-            <select className={styles.input} required>
+            <select className={styles.input} required value={regSetor} onChange={(e) => setRegSetor(e.target.value)}>
               <option value="">Selecione...</option>
               <option value="TI">TI</option>
               <option value="RH">RH</option>
@@ -95,25 +156,25 @@ export default function Login() {
               <option value="Administrativo">Administrativo</option>
             </select>
           </div>
-          <div className={styles.formGroup}>
+          <div className={styles.modalFormGroup}>
             <label>CPF (apenas números)</label>
             <input
               type="text"
               className={styles.input}
               required
               maxLength={11}
-              value={cpf}
-              onChange={(e) => setCpf(e.target.value)}
+              value={regCpf}
+              onChange={(e) => setRegCpf(e.target.value)}
               placeholder="00000000000"
             />
           </div>
-          <div className={styles.formGroup}>
+          <div className={styles.modalFormGroup}>
             <label>Senha</label>
-            <input type="password" className={styles.input} required />
+            <input type="password" className={styles.input} required value={regSenha} onChange={(e) => setRegSenha(e.target.value)} />
           </div>
           <div className={styles.modalActions}>
             <Button type="button" variant="secondary" onClick={() => setIsRegisterModalOpen(false)}>Cancelar</Button>
-            <Button type="submit">Confirmar Cadastro</Button>
+            <Button type="submit" disabled={isRegistering}>{isRegistering ? 'Cadastrando...' : 'Confirmar Cadastro'}</Button>
           </div>
         </form>
       </Modal>

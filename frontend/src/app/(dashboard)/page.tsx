@@ -198,13 +198,13 @@ export default function Dashboard() {
             className={`${styles.abaBtn} ${abaAtiva === 'inventario' ? styles.abaAtiva : ''}`}
             onClick={() => setAbaAtiva('inventario')}
           >
-            Inventário
+            Meu setor
           </button>
           <button
             className={`${styles.abaBtn} ${abaAtiva === 'todos' ? styles.abaAtiva : ''}`}
             onClick={() => setAbaAtiva('todos')}
           >
-            Todos os ativos
+            Todos os Setores
           </button>
         </div>
         <Button
@@ -232,9 +232,9 @@ export default function Dashboard() {
           <h3>
             Seu setor não possui ativos no inventário. Gostaria de cadastrar?
           </h3>
-          <Button 
-            className={styles.emptyStateBtn} 
-            onClick={() => setIsCadastrarModalOpen(true)} 
+          <Button
+            className={styles.emptyStateBtn}
+            onClick={() => setIsCadastrarModalOpen(true)}
             icon={<Plus size={18} />}
           >
             Cadastrar Ativo

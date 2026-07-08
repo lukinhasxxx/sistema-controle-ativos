@@ -6,4 +6,5 @@ public interface IUsuarioService
 {
     Task<UsuarioResponse> CadastrarUsuarioAsync(CadastrarUsuarioRequest request);
     Task<IEnumerable<UsuarioResponse>> ListarUsuariosAsync();
+    Task<UsuarioResponse?> LoginAsync(LoginRequest request);
 }

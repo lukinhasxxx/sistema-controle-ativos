@@ -65,6 +65,7 @@ public class AppDbContext : DbContext
         });
 
         // Seed - usuario admin para testes
+        // Senha: 123456 (hash gerado com BCrypt)
         var adminId = Guid.Parse("11111111-1111-1111-1111-111111111111");
         modelBuilder.Entity<Usuario>().HasData(new Usuario
         {
@@ -72,7 +73,7 @@ public class AppDbContext : DbContext
             NomeCompleto = "Administrador CEJAM",
             Email = "admin@cejam.org.br",
             Cpf = "00000000000",
-            SenhaHash = "hashed_password",
+            SenhaHash = "$2a$11$QZh0FZiCpRmQOJ7IQUD.qerGPmEEcsIqaKMgCBjmGrDYiCGHj5K8a", // 123456
             Setor = "TI"
         });
     }
