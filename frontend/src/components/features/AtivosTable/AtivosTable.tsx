@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Handshake, CornerUpLeft, Pencil, Trash, ArrowUpDown, CheckCircle, MonitorPlay, AlertTriangle, Box } from 'lucide-react';
-import { IAtivo } from '../../types';
+import { IAtivo } from '../../../types';
 import styles from './AtivosTable.module.css';
 
 interface AtivosTableProps {
