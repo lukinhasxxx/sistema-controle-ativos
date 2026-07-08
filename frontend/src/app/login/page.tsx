@@ -7,7 +7,7 @@ import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import Image from 'next/image';
 import Button from '../../components/common/Button';
 import Modal from '../../components/common/Modal';
-import { loginUsuario, cadastrarUsuario } from '../../services/api';
+import { loginUsuario, cadastrarUsuario } from '../../services';
 import styles from './login.module.css';
 import logoCejam from '../../assets/logos/cejamLogon.png';
 
