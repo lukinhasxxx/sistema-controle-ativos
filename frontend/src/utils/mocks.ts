@@ -4,6 +4,7 @@ export const mockAtivos: IAtivo[] = [
   {
     id: '1',
     codigo: 'AT001',
+    codigoIdentificacao: 'AT001',
     equipamento: 'Monitor Dell 24"',
     categoria: 'Monitor',
     status: 'Disponível',
@@ -13,6 +14,7 @@ export const mockAtivos: IAtivo[] = [
   {
     id: '2',
     codigo: 'AT002',
+    codigoIdentificacao: 'AT002',
     equipamento: 'Projetor Epson',
     categoria: 'Projetor',
     status: 'Em Uso',
@@ -22,6 +24,7 @@ export const mockAtivos: IAtivo[] = [
   {
     id: '3',
     codigo: 'AT003',
+    codigoIdentificacao: 'AT003',
     equipamento: 'Notebook Lenovo',
     categoria: 'Notebook',
     status: 'Disponível',
@@ -31,6 +34,7 @@ export const mockAtivos: IAtivo[] = [
   {
     id: '4',
     codigo: 'AT004',
+    codigoIdentificacao: 'AT004',
     equipamento: 'Mouse Logitech',
     categoria: 'Periférico',
     status: 'Em Uso',
@@ -40,6 +44,7 @@ export const mockAtivos: IAtivo[] = [
   {
     id: '5',
     codigo: 'AT005',
+    codigoIdentificacao: 'AT005',
     equipamento: 'Teclado Mecânico',
     categoria: 'Periférico',
     status: 'Manutenção',
