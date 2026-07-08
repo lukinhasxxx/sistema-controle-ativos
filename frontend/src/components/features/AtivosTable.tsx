@@ -129,6 +129,8 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
                     onClick={() => onDevolucao(ativo)}
                     title="Devolução"
                     className={styles.actionBtn}
+                    disabled={ativo.status !== 'Em Uso'}
+                    style={ativo.status !== 'Em Uso' ? { opacity: 0.4, cursor: 'not-allowed' } : {}}
                   >
                     <CornerUpLeft size={18} />
                   </button>
@@ -185,7 +187,12 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
               <button onClick={() => onEmprestimo(ativo)} className={styles.actionBtn}>
                 <Handshake size={18} />
               </button>
-              <button onClick={() => onDevolucao(ativo)} className={styles.actionBtn}>
+              <button 
+                onClick={() => onDevolucao(ativo)} 
+                className={styles.actionBtn}
+                disabled={ativo.status !== 'Em Uso'}
+                style={ativo.status !== 'Em Uso' ? { opacity: 0.4, cursor: 'not-allowed' } : {}}
+              >
                 <CornerUpLeft size={18} />
               </button>
               <button onClick={() => onEditar(ativo)} className={styles.actionBtn}>
