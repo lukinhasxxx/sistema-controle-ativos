@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    image: alpine:latest
+    container_name: ativos_db_init
+    # Um contêiner efêmero apenas para garantir que a pasta do volume seja criada 
+    # e possua as permissões corretas antes do backend assumir.
+    command: >
+      sh -c "mkdir -p /data && chown -R 1000:1000 /data && echo 'Volume do SQLite inicializado.'"
+    volumes:
+      - sqlite_data:/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ativos_backend
+    ports:
+      - "5218:5218"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5218
+      # Sobrescreve a connection string para apontar para o volume
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/ativos.db
+    volumes:
+      - sqlite_data:/app/data
+    depends_on:
+      db:
+        condition: service_completed_successfully
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ativos_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5218
+    depends_on:
+      - backend
+
+volumes:
+  sqlite_data:
+    name: ativos_sqlite_data
