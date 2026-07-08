@@ -1,0 +1,11 @@
+**/.vs
+**/bin
+**/obj
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/node_modules
+.git
+.gitignore
+Dockerfile
+README.md
