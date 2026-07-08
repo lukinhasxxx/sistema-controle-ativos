@@ -8,6 +8,8 @@
   display: flex;
   flex-direction: column;
   color: var(--white);
+  transition: width 0.3s ease;
+  overflow: hidden;
 }
 
 .logoContainer {
@@ -24,12 +26,14 @@
   border-radius: 4px;
   position: relative;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  flex-shrink: 0;
 }
 
 .logoText {
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 1px;
+  white-space: nowrap;
 }
 
 .nav {
@@ -47,6 +51,7 @@
   border-radius: var(--radius-md);
   font-weight: 500;
   transition: background-color 0.2s ease;
+  white-space: nowrap;
 }
 
 .navItem:hover {
@@ -60,3 +65,83 @@
 .active:hover {
   background-color: var(--secondary-color);
 }
+
+/* Botão de colapso — escondido por padrão */
+.collapseBtn {
+  display: none;
+}
+
+/* ── Mini Sidebar (abaixo de 570px) ─────────────────────────── */
+@media (max-width: 570px) {
+  .sidebar {
+    width: 80px;
+  }
+
+  /* Esconde textos */
+  .logoText,
+  .navItem span {
+    display: none;
+  }
+
+  /* Centraliza ícones */
+  .navItem {
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .logoContainer {
+    justify-content: center;
+    padding: 1.5rem 0;
+  }
+
+  /* Botão de colapso aparece no rodapé do sidebar */
+  .collapseBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
+    margin-bottom: 1.5rem;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    align-self: center;
+  }
+
+  .collapseBtn:hover {
+    color: var(--white);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Quando expandido por hover: flutua por cima do conteúdo */
+  .expanded {
+    width: 250px;
+    position: fixed;
+    z-index: 100;
+  }
+
+  /* Mostra textos e botão quando expandido */
+  .expanded .logoText,
+  .expanded .navItem span {
+    display: inline;
+  }
+
+  .expanded .navItem {
+    justify-content: flex-start;
+    padding: 12px 16px;
+  }
+
+  .expanded .logoContainer {
+    justify-content: flex-start;
+    padding: 2rem 1.5rem;
+  }
+
+  .expanded .collapseBtn {
+    align-self: flex-end;
+    margin-right: 1rem;
+  }
+}
+

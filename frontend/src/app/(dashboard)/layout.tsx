@@ -1,6 +1,7 @@
 import React from 'react';
 import Sidebar from '../../components/layout/Sidebar';
 import Header from '../../components/layout/Header';
+import styles from './layout.module.css';
 
 export default function DashboardLayout({
   children,
@@ -10,7 +11,7 @@ export default function DashboardLayout({
   return (
     <div style={{ display: 'flex' }}>
       <Sidebar />
-      <div style={{ marginLeft: '250px', width: 'calc(100% - 250px)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className={styles.content}>
         <Header />
         <main style={{ padding: '0 2rem 2rem 2rem', flex: 1 }}>
           {children}
