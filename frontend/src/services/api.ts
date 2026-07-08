@@ -11,20 +11,47 @@ const api = axios.create({
 /** Retorna a lista de ativos. */
 export async function getAtivos(incluirExcluidos = false): Promise<IAtivo[]> {
   try {
-    const { data } = await api.get<IAtivo[]>('/ativos', {
+    const { data } = await api.get<any[]>('/ativos', {
       params: { incluirExcluidos },
     });
-    return data;
+    // Mapeia codigoIdentificacao (C#) para codigo (React)
+    return data.map((ativo) => ({
+      ...ativo,
+      codigo: ativo.codigoIdentificacao,
+    }));
   } catch (error) {
     throw handleError(error);
   }
 }
 
+
+
 /** Cadastra um novo ativo. */
-export async function cadastrarAtivo(payload: Record<string, unknown>): Promise<IAtivo> {
+export async function cadastrarAtivo(payload: Record<string, any>): Promise<IAtivo> {
   try {
-    const { data } = await api.post<IAtivo>('/ativos', payload);
-    return data;
+    const usuarioStr = localStorage.getItem('usuarioLogado');
+    const usuarioLogado = usuarioStr ? JSON.parse(usuarioStr) : null;
+
+    if (!usuarioLogado || !usuarioLogado.id) {
+      throw new Error("Sessão inválida ou usuário não encontrado. Faça login novamente.");
+    }
+
+    // Monta o payload estritamente como o C# exige
+    const payloadFormatado = {
+      codigoIdentificacao: payload.codigo,
+      equipamento: payload.equipamento,
+      categoria: payload.categoria,
+      status: payload.status,
+      usuarioCadastroId: usuarioLogado.id
+    };
+
+    const { data } = await api.post<any>('/ativos', payloadFormatado);
+
+    // Retorna adaptando para a interface do frontend
+    return {
+      ...data,
+      codigo: data.codigoIdentificacao
+    };
   } catch (error) {
     throw handleError(error);
   }
