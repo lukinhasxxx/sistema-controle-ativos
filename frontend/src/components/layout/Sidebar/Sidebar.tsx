@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { LayoutDashboard, Folder, Handshake, ChevronLeft } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import styles from './Sidebar.module.css';
-import logoCejam from '../../assets/logos/cejamLogon.png';
+import logoCejam from '../../../assets/logos/cejamLogon.png';
 
 const SidebarContent = () => {
   const [isExpanded, setIsExpanded] = useState(false);

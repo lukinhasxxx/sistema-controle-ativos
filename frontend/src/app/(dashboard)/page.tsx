@@ -13,7 +13,7 @@ import {
   devolverAtivo,
   excluirAtivo,
   getUsuarios,
-} from '../../services/api';
+} from '../../services';
 import KpiCard from '../../components/features/KpiCard';
 import AtivosTable from '../../components/features/AtivosTable';
 import Modal from '../../components/common/Modal';
