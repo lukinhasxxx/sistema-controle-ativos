@@ -146,10 +146,11 @@
 
 .cardActions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 12px;
   padding-top: 1rem;
   border-top: 1px solid var(--border-color);
+  flex-wrap: wrap;
 }
 
 .sortableHeader {

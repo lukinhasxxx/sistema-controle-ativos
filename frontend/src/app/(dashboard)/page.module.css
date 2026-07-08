@@ -25,24 +25,24 @@
   }
 
   .abaBtn {
-    flex: 1;
-    font-size: 1.05rem;
-    padding: 0.6rem;
+    font-size: 0.85rem;
+    padding: 0.35rem 0.5rem;
   }
 
   .pageHeader>button {
-    width: 70%;
+    width: 100%;
     max-width: 350px;
-    font-size: 1.05rem;
-    padding: 0.70rem;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    white-space: nowrap;
   }
 }
 
 .abas {
   display: flex;
   position: relative;
-  gap: 0.5rem;
-  background-color: #f1f3f5;
+  gap: 4px;
+  background-color: #e2e8f0;
   border-radius: var(--radius-md);
   padding: 4px;
 }
@@ -55,21 +55,20 @@
   width: calc(50% - 6px);
   background-color: var(--white);
   border-radius: var(--radius-sm);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
 }
 
 .slideRight {
-  transform: translateX(calc(100% + 8px));
+  transform: translateX(calc(100% + 4px));
 }
 
 .abaBtn {
   position: relative;
   z-index: 2;
-  flex: 1;
-  min-width: 140px;
-  padding: 0.4rem 1.1rem;
+  flex: 1 1 0;
+  padding: 0.3rem 1rem;
   border: none;
   background: transparent;
   border-radius: var(--radius-sm);
@@ -78,10 +77,14 @@
   color: var(--text-muted);
   cursor: pointer;
   transition: color 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .abaBtn:hover {
   color: var(--text-main);
+  background-color: rgba(0, 0, 0, 0.06);
 }
 
 .abaAtiva {
@@ -164,4 +167,36 @@
   padding: 1rem;
   border-radius: var(--radius-md);
   margin-bottom: 1rem;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  margin: 2rem 0;
+  gap: 1rem;
+  background-color: var(--white);
+  text-align: center;
+}
+
+.emptyState h3 {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .emptyState h3 {
+    font-size: 0.95rem;
+  }
+  
+  .emptyStateBtn {
+    width: 8rem !important;      /* ~128px */
+    height: 2.5rem !important;   /* 40px */
+    font-size: 0.8rem !important;
+    padding: 0 !important;
+  }
 }

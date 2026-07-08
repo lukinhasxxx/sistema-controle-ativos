@@ -193,6 +193,7 @@ export default function Dashboard() {
       {/* Seletor de aba (substituirá link da Sidebar quando houver contexto) */}
       <div className={styles.pageHeader}>
         <div className={styles.abas}>
+          <div className={`${styles.abaBg} ${abaAtiva === 'todos' ? styles.slideRight : ''}`} />
           <button
             className={`${styles.abaBtn} ${abaAtiva === 'inventario' ? styles.abaAtiva : ''}`}
             onClick={() => setAbaAtiva('inventario')}
@@ -227,26 +228,16 @@ export default function Dashboard() {
           <Loader2 size={32} className={styles.spinner} />
         </div>
       ) : ativos.length === 0 ? (
-        <div
-          className="empty-state"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '3rem',
-            border: '1px dashed var(--border-color)',
-            borderRadius: 'var(--radius-lg)',
-            margin: '2rem 0',
-            gap: '1rem',
-            backgroundColor: 'var(--white)',
-          }}
-        >
-          <h3 style={{ color: 'var(--text-muted)' }}>
+        <div className={styles.emptyState}>
+          <h3>
             Seu setor não possui ativos no inventário. Gostaria de cadastrar?
           </h3>
-          <Button onClick={() => setIsCadastrarModalOpen(true)} icon={<Plus size={18} />}>
-            + Cadastrar Ativo
+          <Button 
+            className={styles.emptyStateBtn} 
+            onClick={() => setIsCadastrarModalOpen(true)} 
+            icon={<Plus size={18} />}
+          >
+            Cadastrar Ativo
           </Button>
         </div>
       ) : (

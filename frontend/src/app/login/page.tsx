@@ -39,13 +39,13 @@ export default function Login() {
       <div className={styles.card}>
         <div className={styles.logoContainer}>
           <div className={styles.logoIcon}></div>
-          <span className={styles.logoText}>Afonso teste</span>
+          <span className={styles.logoText}>CEJAM</span>
         </div>
         <h2 className={styles.title}>Acesse sua conta</h2>
         <form onSubmit={handleLogin} className={styles.form}>
           <div className={styles.formGroup}>
             <label>E-mail</label>
-            <input type="email" className={styles.input} required defaultValue="admin@afonso.org.br" />
+            <input type="email" className={styles.input} required defaultValue="admin@cejam.org.br" />
           </div>
           <div className={styles.formGroup}>
             <label>Senha</label>
