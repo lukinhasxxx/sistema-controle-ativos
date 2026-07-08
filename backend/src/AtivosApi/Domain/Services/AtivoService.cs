@@ -54,6 +54,8 @@ public class AtivoService : IAtivoService
     {
         var query = _context.Ativos
             .Include(a => a.UsuarioCadastro)
+            .Include(a => a.Emprestimos.Where(e => e.DataDevolucao == null))
+                .ThenInclude(e => e.UsuarioSolicitante)
             .AsQueryable();
 
         if (!incluirExcluidos)
@@ -153,15 +155,30 @@ public class AtivoService : IAtivoService
     }
 
     // ---------- Auxiliar ----------
-    private static AtivoResponse ToResponse(Ativo ativo) => new(
-        ativo.Id,
-        ativo.CodigoIdentificacao,
-        ativo.Equipamento,
-        ativo.Categoria,
-        ativo.Status.ToString(),
-        ativo.IsExcluido,
-        ativo.UsuarioCadastroId,
-        ativo.UsuarioCadastro?.Setor ?? "N/A",
-        null
-    );
+    private static AtivoResponse ToResponse(Ativo ativo)
+    {
+        var statusAmigavel = ativo.Status switch
+        {
+            StatusAtivo.Disponivel => "Disponível",
+            StatusAtivo.EmUso => "Em Uso",
+            StatusAtivo.Manutencao => "Manutenção",
+            StatusAtivo.Estoque => "Estoque",
+            _ => ativo.Status.ToString()
+        };
+
+        var emprestimoAtivo = ativo.Emprestimos?.FirstOrDefault(e => e.DataDevolucao == null);
+        var responsavel = emprestimoAtivo?.UsuarioSolicitante?.NomeCompleto;
+
+        return new AtivoResponse(
+            ativo.Id,
+            ativo.CodigoIdentificacao,
+            ativo.Equipamento,
+            ativo.Categoria,
+            statusAmigavel,
+            ativo.IsExcluido,
+            ativo.UsuarioCadastroId,
+            ativo.UsuarioCadastro?.Setor ?? "N/A",
+            responsavel
+        );
+    }
 }

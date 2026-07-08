@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Handshake, CornerUpLeft, Pencil, Trash, ArrowUpDown } from 'lucide-react';
+import { Handshake, CornerUpLeft, Pencil, Trash, ArrowUpDown, CheckCircle, MonitorPlay, AlertTriangle, Box } from 'lucide-react';
 import { IAtivo } from '../../types';
 import styles from './AtivosTable.module.css';
 
@@ -22,6 +22,16 @@ const getStatusClass = (status: string) => {
     case 'Manutenção':  return styles.statusMaintenance;
     case 'Estoque':     return styles.statusStock;
     default:            return '';
+  }
+};
+
+const getStatusIcon = (status: string) => {
+  switch (status) {
+    case 'Disponível':  return <CheckCircle size={14} style={{ marginRight: 4 }} />;
+    case 'Em Uso':      return <MonitorPlay size={14} style={{ marginRight: 4 }} />;
+    case 'Manutenção':  return <AlertTriangle size={14} style={{ marginRight: 4 }} />;
+    case 'Estoque':     return <Box size={14} style={{ marginRight: 4 }} />;
+    default:            return null;
   }
 };
 
@@ -117,7 +127,8 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
               <td className={styles.equipamento} style={{ textDecoration: ativo.isExcluido ? 'line-through' : 'none' }}>{ativo.equipamento}</td>
               <td>{ativo.categoria}</td>
               <td>
-                <span className={`${styles.statusBadge} ${getStatusClass(ativo.status)}`}>
+                <span className={`${styles.statusBadge} ${getStatusClass(ativo.status)}`} style={{ display: 'inline-flex', alignItems: 'center' }}>
+                  {getStatusIcon(ativo.status)}
                   {ativo.status}
                 </span>
               </td>
@@ -186,7 +197,8 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
           <div key={ativo.id} className={styles.mobileCard}>
             <div className={styles.cardHeader}>
               <span className={styles.cardCode}>{ativo.codigo}</span>
-              <span className={`${styles.statusBadge} ${getStatusClass(ativo.status)}`}>
+              <span className={`${styles.statusBadge} ${getStatusClass(ativo.status)}`} style={{ display: 'inline-flex', alignItems: 'center' }}>
+                {getStatusIcon(ativo.status)}
                 {ativo.status}
               </span>
             </div>
