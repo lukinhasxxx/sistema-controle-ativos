@@ -50,7 +50,37 @@ public class AtivosController : ControllerBase
         }
         catch (DbUpdateException)
         {
-            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores unicos nao estao duplicados." });
+            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores únicos nao estao duplicados." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { mensagem = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Edita um ativo existente.
+    /// </summary>
+    /// <param name="id">ID do ativo.</param>
+    /// <param name="request">Dados para edição.</param>
+    /// <returns>O ativo atualizado.</returns>
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(AtivoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Editar(Guid id, [FromBody] EditarAtivoRequest request)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            var ativo = await _ativoService.EditarAtivoAsync(id, request);
+            return Ok(ativo);
+        }
+        catch (Exception ex) when (ex.Message.Contains("não encontrado"))
+        {
+            return NotFound(new { mensagem = ex.Message });
         }
         catch (Exception ex)
         {
@@ -81,7 +111,7 @@ public class AtivosController : ControllerBase
         }
         catch (DbUpdateException)
         {
-            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores unicos nao estao duplicados." });
+            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores únicos nao estao duplicados." });
         }
         catch (KeyNotFoundException ex)
         {
@@ -111,7 +141,7 @@ public class AtivosController : ControllerBase
         }
         catch (DbUpdateException)
         {
-            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores unicos nao estao duplicados." });
+            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores únicos nao estao duplicados." });
         }
         catch (KeyNotFoundException ex)
         {
@@ -144,7 +174,7 @@ public class AtivosController : ControllerBase
         }
         catch (DbUpdateException)
         {
-            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores unicos nao estao duplicados." });
+            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores únicos nao estao duplicados." });
         }
     }
 }

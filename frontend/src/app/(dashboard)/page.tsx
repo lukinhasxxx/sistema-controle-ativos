@@ -1,15 +1,18 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { Plus, AlertCircle, LayoutGrid, Package, Monitor, Loader2 } from 'lucide-react';
-import { IAtivo } from '../../types';
+import { IAtivo, StatusAtivo } from '../../types';
 import {
   getAtivos,
   cadastrarAtivo,
+  editarAtivo,
   emprestarAtivo,
   devolverAtivo,
   excluirAtivo,
+  getUsuarios,
 } from '../../services/api';
 import KpiCard from '../../components/features/KpiCard';
 import AtivosTable from '../../components/features/AtivosTable';
@@ -20,7 +23,7 @@ import styles from './page.module.css';
 // ──────────────────────────────────────────────────────────────────────────────
 // Tipos locais
 // ──────────────────────────────────────────────────────────────────────────────
-type AbaAtiva = 'inventario' | 'todos';
+type ViewMode = 'inventario' | 'todos-ativos' | 'emprestimos';
 
 interface UsuarioLogado {
   id: string;
@@ -39,58 +42,85 @@ function getUsuarioLogado(): UsuarioLogado | null {
 // ──────────────────────────────────────────────────────────────────────────────
 // Componente
 // ──────────────────────────────────────────────────────────────────────────────
-export default function Dashboard() {
+function DashboardContent() {
   // Lista completa vinda da API
   const [todosAtivos, setTodosAtivos] = useState<IAtivo[]>([]);
+  const [usuarios, setUsuarios] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Aba ativa — controlada pela Sidebar via prop ou (futuramente) context
-  // Por ora lemos de um estado interno; a Sidebar passará o valor via URL ou prop
-  const [abaAtiva, setAbaAtiva] = useState<AbaAtiva>('inventario');
+  const searchParams = useSearchParams();
+  const view = (searchParams.get('view') as ViewMode) || 'inventario';
+
+  const [filtroStatus, setFiltroStatus] = useState<StatusAtivo | null>(null);
 
   const [selectedAtivo, setSelectedAtivo] = useState<IAtivo | null>(null);
 
   // Form refs — evita criar state para cada campo do formulário
   const cadastrarFormRef = useRef<HTMLFormElement>(null);
   const emprestimoFormRef = useRef<HTMLFormElement>(null);
+  const editarFormRef = useRef<HTMLFormElement>(null);
 
   // Modal States
   const [isCadastrarModalOpen, setIsCadastrarModalOpen] = useState(false);
   const [isEmprestimoModalOpen, setIsEmprestimoModalOpen] = useState(false);
   const [isDevolucaoModalOpen, setIsDevolucaoModalOpen] = useState(false);
   const [isExcluirModalOpen, setIsExcluirModalOpen] = useState(false);
+  const [isEditarModalOpen, setIsEditarModalOpen] = useState(false);
 
   // ── Busca da API ────────────────────────────────────────────────────────────
-  const fetchAtivos = useCallback(async () => {
+  const fetchAtivosEUsuarios = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await getAtivos();
-      setTodosAtivos(data);
+      // Sempre busca com excluídos, filtramos no frontend baseado na view
+      const [ativosData, usuariosData] = await Promise.all([
+        getAtivos(true),
+        getUsuarios(),
+      ]);
+      setTodosAtivos(ativosData);
+      setUsuarios(usuariosData);
     } catch (err) {
-      toast.error((err as Error).message || 'Erro ao buscar ativos.');
+      toast.error((err as Error).message || 'Erro ao buscar dados.');
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchAtivos();
-  }, [fetchAtivos]);
+    fetchAtivosEUsuarios();
+  }, [fetchAtivosEUsuarios]);
 
-  // ── Filtro por setor (Regra de Negócio Crítica) ─────────────────────────────
-  const ativos: IAtivo[] = (() => {
-    if (abaAtiva === 'todos') return todosAtivos;
+  // ── Filtro por View e Setor ─────────────────────────────────────────────────
+  const ativosFiltradosPorView: IAtivo[] = (() => {
     const usuario = getUsuarioLogado();
-    if (!usuario) return todosAtivos;
-    return todosAtivos.filter((a) => a.setor === usuario.setor);
+    
+    if (view === 'todos-ativos') {
+      return todosAtivos;
+    } 
+    
+    if (view === 'emprestimos') {
+      return todosAtivos.filter(a => a.status === 'Em Uso' && !a.isExcluido);
+    }
+    
+    // view === 'inventario' (default)
+    if (!usuario) return todosAtivos.filter(a => !a.isExcluido);
+    return todosAtivos.filter((a) => a.setor === usuario.setor && !a.isExcluido);
   })();
 
-  // ── KPIs — calculados sobre a lista exibida ─────────────────────────────────
-  const total = ativos.length;
-  const disponiveis = ativos.filter((a) => a.status === 'Disponível').length;
-  const emUso = ativos.filter((a) => a.status === 'Em Uso').length;
-  const manutencao = ativos.filter((a) => a.status === 'Manutenção').length;
-  const estoque = ativos.filter((a) => a.status === 'Estoque').length;
+  // ── KPIs — calculados sobre a lista filtrada pela view (sem filtro de status aplicado)
+  const total = ativosFiltradosPorView.length;
+  const disponiveis = ativosFiltradosPorView.filter((a) => a.status === 'Disponível').length;
+  const emUso = ativosFiltradosPorView.filter((a) => a.status === 'Em Uso').length;
+  const manutencao = ativosFiltradosPorView.filter((a) => a.status === 'Manutenção').length;
+  const estoque = ativosFiltradosPorView.filter((a) => a.status === 'Estoque').length;
+
+  // ── Lista final exibida na tabela (com filtro de status, se houver)
+  const ativos = filtroStatus 
+    ? ativosFiltradosPorView.filter((a) => a.status === filtroStatus)
+    : ativosFiltradosPorView;
+
+  const handleKpiClick = (status: StatusAtivo | null) => {
+    setFiltroStatus(prev => prev === status ? null : status);
+  };
 
   // ── Handlers ────────────────────────────────────────────────────────────────
   const handleCadastrar = async (e: React.FormEvent) => {
@@ -113,7 +143,7 @@ export default function Dashboard() {
       toast.success('Ativo cadastrado com sucesso!');
       setIsCadastrarModalOpen(false);
       form.reset();
-      fetchAtivos();
+      fetchAtivosEUsuarios();
     } catch (err) {
       toast.error((err as Error).message || 'Erro ao cadastrar ativo.');
     }
@@ -126,8 +156,8 @@ export default function Dashboard() {
     if (!form) return;
 
     const payload = {
-      responsavel: (form.elements.namedItem('responsavel') as HTMLSelectElement)?.value,
-      setor: (form.elements.namedItem('setorEmprestimo') as HTMLSelectElement)?.value,
+      usuarioSolicitanteId: (form.elements.namedItem('responsavel') as HTMLSelectElement)?.value,
+      setorDestino: (form.elements.namedItem('setorEmprestimo') as HTMLInputElement)?.value,
       observacoes: (form.elements.namedItem('observacoes') as HTMLTextAreaElement)?.value,
     };
 
@@ -136,9 +166,31 @@ export default function Dashboard() {
       toast.success('Empréstimo realizado com sucesso!');
       setIsEmprestimoModalOpen(false);
       setSelectedAtivo(null);
-      fetchAtivos();
+      fetchAtivosEUsuarios();
     } catch (err) {
       toast.error((err as Error).message || 'Erro ao registrar empréstimo.');
+    }
+  };
+
+  const handleEditar = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedAtivo) return;
+    const form = editarFormRef.current;
+    if (!form) return;
+
+    const payload = {
+      equipamento: (form.elements.namedItem('equipamento') as HTMLInputElement)?.value,
+      categoria: (form.elements.namedItem('categoria') as HTMLSelectElement)?.value,
+    };
+
+    try {
+      await editarAtivo(selectedAtivo.id, payload);
+      toast.success('Ativo editado com sucesso!');
+      setIsEditarModalOpen(false);
+      setSelectedAtivo(null);
+      fetchAtivosEUsuarios();
+    } catch (err) {
+      toast.error((err as Error).message || 'Erro ao editar ativo.');
     }
   };
 
@@ -149,7 +201,7 @@ export default function Dashboard() {
       toast.success('Devolução registrada com sucesso!');
       setIsDevolucaoModalOpen(false);
       setSelectedAtivo(null);
-      fetchAtivos();
+      fetchAtivosEUsuarios();
     } catch (err) {
       toast.error((err as Error).message || 'Erro ao registrar devolução.');
     }
@@ -162,7 +214,7 @@ export default function Dashboard() {
       toast.success('Ativo excluído com sucesso!');
       setIsExcluirModalOpen(false);
       setSelectedAtivo(null);
-      fetchAtivos();
+      fetchAtivosEUsuarios();
     } catch (err) {
       toast.error((err as Error).message || 'Erro ao excluir ativo.');
     }
@@ -183,30 +235,20 @@ export default function Dashboard() {
     setIsExcluirModalOpen(true);
   };
 
-  const openEditar = (_ativo: IAtivo) => {
-    toast('Função de editar em desenvolvimento', { icon: '🚧' });
+  const openEditar = (ativo: IAtivo) => {
+    setSelectedAtivo(ativo);
+    setIsEditarModalOpen(true);
   };
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <div>
-      {/* Seletor de aba (substituirá link da Sidebar quando houver contexto) */}
       <div className={styles.pageHeader}>
-        <div className={styles.abas}>
-          <div className={`${styles.abaBg} ${abaAtiva === 'todos' ? styles.slideRight : ''}`} />
-          <button
-            className={`${styles.abaBtn} ${abaAtiva === 'inventario' ? styles.abaAtiva : ''}`}
-            onClick={() => setAbaAtiva('inventario')}
-          >
-            Inventário
-          </button>
-          <button
-            className={`${styles.abaBtn} ${abaAtiva === 'todos' ? styles.abaAtiva : ''}`}
-            onClick={() => setAbaAtiva('todos')}
-          >
-            Todos os ativos
-          </button>
-        </div>
+        <h2>
+          {view === 'inventario' && 'Inventário do Setor'}
+          {view === 'todos-ativos' && 'Todos os Ativos (Geral)'}
+          {view === 'emprestimos' && 'Ativos Emprestados'}
+        </h2>
         <Button
           onClick={() => setIsCadastrarModalOpen(true)}
           icon={<Plus size={18} />}
@@ -216,11 +258,46 @@ export default function Dashboard() {
       </div>
 
       <div className={styles.kpiGrid}>
-        <KpiCard title="Total de Ativos:" value={total} icon={<LayoutGrid size={24} />} colorType="total" />
-        <KpiCard title="Disponíveis:" value={disponiveis} icon={<Package size={24} />} colorType="available" />
-        <KpiCard title="Em Uso:" value={emUso} icon={<Monitor size={24} />} colorType="inUse" />
-        <KpiCard title="Manutenção:" value={manutencao} icon={<AlertCircle size={24} />} colorType="maintenance" />
-        <KpiCard title="Estoque:" value={estoque} icon={<Package size={24} />} colorType="available" />
+        <KpiCard 
+          title="Total de Ativos:" 
+          value={total} 
+          icon={<LayoutGrid size={24} />} 
+          colorType="total" 
+          isActive={filtroStatus === null}
+          onClick={() => handleKpiClick(null)}
+        />
+        <KpiCard 
+          title="Disponíveis:" 
+          value={disponiveis} 
+          icon={<Package size={24} />} 
+          colorType="available" 
+          isActive={filtroStatus === 'Disponível'}
+          onClick={() => handleKpiClick('Disponível')}
+        />
+        <KpiCard 
+          title="Em Uso:" 
+          value={emUso} 
+          icon={<Monitor size={24} />} 
+          colorType="inUse" 
+          isActive={filtroStatus === 'Em Uso'}
+          onClick={() => handleKpiClick('Em Uso')}
+        />
+        <KpiCard 
+          title="Manutenção:" 
+          value={manutencao} 
+          icon={<AlertCircle size={24} />} 
+          colorType="maintenance" 
+          isActive={filtroStatus === 'Manutenção'}
+          onClick={() => handleKpiClick('Manutenção')}
+        />
+        <KpiCard 
+          title="Estoque:" 
+          value={estoque} 
+          icon={<Package size={24} />} 
+          colorType="available" 
+          isActive={filtroStatus === 'Estoque'}
+          onClick={() => handleKpiClick('Estoque')}
+        />
       </div>
 
       {isLoading ? (
@@ -232,9 +309,9 @@ export default function Dashboard() {
           <h3>
             Seu setor não possui ativos no inventário. Gostaria de cadastrar?
           </h3>
-          <Button 
-            className={styles.emptyStateBtn} 
-            onClick={() => setIsCadastrarModalOpen(true)} 
+          <Button
+            className={styles.emptyStateBtn}
+            onClick={() => setIsCadastrarModalOpen(true)}
             icon={<Plus size={18} />}
           >
             Cadastrar Ativo
@@ -307,20 +384,36 @@ export default function Dashboard() {
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label>Responsável</label>
-              <select name="responsavel" className={styles.input} required>
+              <select 
+                name="responsavel" 
+                className={styles.input} 
+                required
+                onChange={(e) => {
+                  const userId = e.target.value;
+                  const user = usuarios.find(u => u.id === userId);
+                  const form = emprestimoFormRef.current;
+                  if (form && user) {
+                    const setorInput = form.elements.namedItem('setorEmprestimo') as HTMLInputElement;
+                    if (setorInput) setorInput.value = user.setor;
+                  }
+                }}
+              >
                 <option value="">Selecione...</option>
-                <option value="João Silva">João Silva</option>
-                <option value="Maria Santos">Maria Santos</option>
+                {usuarios.map(u => (
+                  <option key={u.id} value={u.id}>{u.nomeCompleto} - {u.setor}</option>
+                ))}
               </select>
             </div>
             <div className={styles.formGroup}>
               <label>Setor</label>
-              <select name="setorEmprestimo" className={styles.input} required>
-                <option value="">Selecione...</option>
-                <option value="TI">TI</option>
-                <option value="RH">RH</option>
-                <option value="Financeiro">Financeiro</option>
-              </select>
+              <input 
+                name="setorEmprestimo" 
+                type="text" 
+                className={styles.input} 
+                readOnly 
+                required 
+                placeholder="Preenchido automaticamente"
+              />
             </div>
           </div>
           <div className={styles.formGroup}>
@@ -376,6 +469,55 @@ export default function Dashboard() {
           </div>
         </div>
       </Modal>
+
+      {/* ── Modal Editar ──────────────────────────────────────────────────── */}
+      <Modal
+        isOpen={isEditarModalOpen}
+        onClose={() => setIsEditarModalOpen(false)}
+        title="Editar Ativo"
+      >
+        <form ref={editarFormRef} onSubmit={handleEditar} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label>Nome do equipamento</label>
+            <input 
+              name="equipamento" 
+              type="text" 
+              className={styles.input} 
+              defaultValue={selectedAtivo?.equipamento}
+              required 
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Categoria</label>
+            <select 
+              name="categoria" 
+              className={styles.input} 
+              defaultValue={selectedAtivo?.categoria}
+              required
+            >
+              <option value="">Selecione...</option>
+              <option value="Monitor">Monitor</option>
+              <option value="Notebook">Notebook</option>
+              <option value="Periférico">Periférico</option>
+              <option value="Mobília">Mobília</option>
+            </select>
+          </div>
+          <div className={styles.modalActions}>
+            <Button type="button" variant="secondary" onClick={() => setIsEditarModalOpen(false)}>
+              Cancelar
+            </Button>
+            <Button type="submit">Salvar Alterações</Button>
+          </div>
+        </form>
+      </Modal>
     </div>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}><Loader2 className="animate-spin" size={32} /></div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }

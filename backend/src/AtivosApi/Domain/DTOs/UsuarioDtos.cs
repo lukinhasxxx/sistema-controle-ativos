@@ -33,6 +33,21 @@ public record CadastrarUsuarioRequest
     public string Setor { get; init; } = string.Empty;
 }
 
+public record LoginRequest
+{
+    /// <summary>
+    /// E-mail corporativo do usuário.
+    /// </summary>
+    /// <example>admin@cejam.org.br</example>
+    public string Email { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Senha de acesso ao sistema.
+    /// </summary>
+    /// <example>123456</example>
+    public string Senha { get; init; } = string.Empty;
+}
+
 public record UsuarioResponse(
     Guid Id,
     string NomeCompleto,

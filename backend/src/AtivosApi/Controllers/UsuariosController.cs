@@ -49,11 +49,32 @@ public class UsuariosController : ControllerBase
         }
         catch (DbUpdateException)
         {
-            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores unicos nao estao duplicados." });
+            return BadRequest(new { mensagem = "Erro de integridade de dados. Verifique se os IDs existem e se os valores únicos nao estao duplicados." });
         }
         catch (Exception ex)
         {
             return BadRequest(new { mensagem = ex.Message });
         }
+    }
+
+    /// <summary>
+    /// Autentica um usuário com e-mail e senha.
+    /// </summary>
+    /// <param name="request">Credenciais de acesso.</param>
+    /// <returns>Dados do usuário autenticado.</returns>
+    [HttpPost("login")]
+    [ProducesResponseType(typeof(UsuarioResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var usuario = await _usuarioService.LoginAsync(request);
+
+        if (usuario == null)
+            return Unauthorized(new { mensagem = "E-mail ou senha inválidos." });
+
+        return Ok(usuario);
     }
 }

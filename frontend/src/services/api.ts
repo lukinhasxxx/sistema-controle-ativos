@@ -8,6 +8,46 @@ const api = axios.create({
   },
 });
 
+// ── Usuários ──────────────────────────────────────────────────────────────────
+
+/** Autentica um usuário com e-mail e senha. */
+export async function loginUsuario(email: string, senha: string) {
+  try {
+    const { data } = await api.post('/usuarios/login', { email, senha });
+    return data as { id: string; nomeCompleto: string; setor: string };
+  } catch (error) {
+    throw handleError(error);
+  }
+}
+
+/** Cadastra um novo usuário. */
+export async function cadastrarUsuario(payload: {
+  nomeCompleto: string;
+  email: string;
+  cpf: string;
+  senha: string;
+  setor: string;
+}) {
+  try {
+    const { data } = await api.post('/usuarios', payload);
+    return data;
+  } catch (error) {
+    throw handleError(error);
+  }
+}
+
+/** Lista todos os usuários. */
+export async function getUsuarios() {
+  try {
+    const { data } = await api.get<{ id: string; nomeCompleto: string; setor: string }[]>('/usuarios');
+    return data;
+  } catch (error) {
+    throw handleError(error);
+  }
+}
+
+// ── Ativos ────────────────────────────────────────────────────────────────────
+
 /** Retorna a lista de ativos. */
 export async function getAtivos(incluirExcluidos = false): Promise<IAtivo[]> {
   try {
@@ -23,8 +63,6 @@ export async function getAtivos(incluirExcluidos = false): Promise<IAtivo[]> {
     throw handleError(error);
   }
 }
-
-
 
 /** Cadastra um novo ativo. */
 export async function cadastrarAtivo(payload: Record<string, any>): Promise<IAtivo> {
@@ -57,13 +95,29 @@ export async function cadastrarAtivo(payload: Record<string, any>): Promise<IAti
   }
 }
 
+/** Edita equipamento e categoria de um ativo. */
+export async function editarAtivo(
+  id: string,
+  payload: { equipamento: string; categoria: string },
+): Promise<IAtivo> {
+  try {
+    const { data } = await api.put<any>(`/ativos/${id}`, payload);
+    return {
+      ...data,
+      codigo: data.codigoIdentificacao,
+    };
+  } catch (error) {
+    throw handleError(error);
+  }
+}
+
 /** Registra um empréstimo de ativo. */
 export async function emprestarAtivo(
   id: string,
-  payload: Record<string, unknown>,
-): Promise<IAtivo> {
+  payload: { usuarioSolicitanteId: string; setorDestino: string; observacoes?: string },
+): Promise<any> {
   try {
-    const { data } = await api.post<IAtivo>(`/ativos/${id}/emprestar`, payload);
+    const { data } = await api.post(`/ativos/${id}/emprestar`, payload);
     return data;
   } catch (error) {
     throw handleError(error);
@@ -93,6 +147,7 @@ export async function excluirAtivo(id: string): Promise<void> {
 function handleError(error: unknown): Error {
   if (error instanceof AxiosError) {
     const msg =
+      error.response?.data?.mensagem ??
       error.response?.data?.message ??
       error.response?.data ??
       error.message ??
