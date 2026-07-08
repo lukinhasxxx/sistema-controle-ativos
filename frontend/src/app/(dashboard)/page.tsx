@@ -10,6 +10,7 @@ import {
   emprestarAtivo,
   devolverAtivo,
   excluirAtivo,
+  getUsuarios,
 } from '../../services/api';
 import KpiCard from '../../components/features/KpiCard';
 import AtivosTable from '../../components/features/AtivosTable';
@@ -42,6 +43,7 @@ function getUsuarioLogado(): UsuarioLogado | null {
 export default function Dashboard() {
   // Lista completa vinda da API
   const [todosAtivos, setTodosAtivos] = useState<IAtivo[]>([]);
+  const [usuarios, setUsuarios] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Aba ativa — controlada pela Sidebar via prop ou (futuramente) context
@@ -61,21 +63,25 @@ export default function Dashboard() {
   const [isExcluirModalOpen, setIsExcluirModalOpen] = useState(false);
 
   // ── Busca da API ────────────────────────────────────────────────────────────
-  const fetchAtivos = useCallback(async () => {
+  const fetchAtivosEUsuarios = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await getAtivos();
-      setTodosAtivos(data);
+      const [ativosData, usuariosData] = await Promise.all([
+        getAtivos(),
+        getUsuarios(),
+      ]);
+      setTodosAtivos(ativosData);
+      setUsuarios(usuariosData);
     } catch (err) {
-      toast.error((err as Error).message || 'Erro ao buscar ativos.');
+      toast.error((err as Error).message || 'Erro ao buscar dados.');
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchAtivos();
-  }, [fetchAtivos]);
+    fetchAtivosEUsuarios();
+  }, [fetchAtivosEUsuarios]);
 
   // ── Filtro por setor (Regra de Negócio Crítica) ─────────────────────────────
   const ativos: IAtivo[] = (() => {
@@ -113,7 +119,7 @@ export default function Dashboard() {
       toast.success('Ativo cadastrado com sucesso!');
       setIsCadastrarModalOpen(false);
       form.reset();
-      fetchAtivos();
+      fetchAtivosEUsuarios();
     } catch (err) {
       toast.error((err as Error).message || 'Erro ao cadastrar ativo.');
     }
@@ -126,8 +132,8 @@ export default function Dashboard() {
     if (!form) return;
 
     const payload = {
-      responsavel: (form.elements.namedItem('responsavel') as HTMLSelectElement)?.value,
-      setor: (form.elements.namedItem('setorEmprestimo') as HTMLSelectElement)?.value,
+      usuarioSolicitanteId: (form.elements.namedItem('responsavel') as HTMLSelectElement)?.value,
+      setorDestino: (form.elements.namedItem('setorEmprestimo') as HTMLInputElement)?.value,
       observacoes: (form.elements.namedItem('observacoes') as HTMLTextAreaElement)?.value,
     };
 
@@ -136,7 +142,7 @@ export default function Dashboard() {
       toast.success('Empréstimo realizado com sucesso!');
       setIsEmprestimoModalOpen(false);
       setSelectedAtivo(null);
-      fetchAtivos();
+      fetchAtivosEUsuarios();
     } catch (err) {
       toast.error((err as Error).message || 'Erro ao registrar empréstimo.');
     }
@@ -149,7 +155,7 @@ export default function Dashboard() {
       toast.success('Devolução registrada com sucesso!');
       setIsDevolucaoModalOpen(false);
       setSelectedAtivo(null);
-      fetchAtivos();
+      fetchAtivosEUsuarios();
     } catch (err) {
       toast.error((err as Error).message || 'Erro ao registrar devolução.');
     }
@@ -162,7 +168,7 @@ export default function Dashboard() {
       toast.success('Ativo excluído com sucesso!');
       setIsExcluirModalOpen(false);
       setSelectedAtivo(null);
-      fetchAtivos();
+      fetchAtivosEUsuarios();
     } catch (err) {
       toast.error((err as Error).message || 'Erro ao excluir ativo.');
     }
@@ -307,20 +313,36 @@ export default function Dashboard() {
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label>Responsável</label>
-              <select name="responsavel" className={styles.input} required>
+              <select 
+                name="responsavel" 
+                className={styles.input} 
+                required
+                onChange={(e) => {
+                  const userId = e.target.value;
+                  const user = usuarios.find(u => u.id === userId);
+                  const form = emprestimoFormRef.current;
+                  if (form && user) {
+                    const setorInput = form.elements.namedItem('setorEmprestimo') as HTMLInputElement;
+                    if (setorInput) setorInput.value = user.setor;
+                  }
+                }}
+              >
                 <option value="">Selecione...</option>
-                <option value="João Silva">João Silva</option>
-                <option value="Maria Santos">Maria Santos</option>
+                {usuarios.map(u => (
+                  <option key={u.id} value={u.id}>{u.nomeCompleto} - {u.setor}</option>
+                ))}
               </select>
             </div>
             <div className={styles.formGroup}>
               <label>Setor</label>
-              <select name="setorEmprestimo" className={styles.input} required>
-                <option value="">Selecione...</option>
-                <option value="TI">TI</option>
-                <option value="RH">RH</option>
-                <option value="Financeiro">Financeiro</option>
-              </select>
+              <input 
+                name="setorEmprestimo" 
+                type="text" 
+                className={styles.input} 
+                readOnly 
+                required 
+                placeholder="Preenchido automaticamente"
+              />
             </div>
           </div>
           <div className={styles.formGroup}>
