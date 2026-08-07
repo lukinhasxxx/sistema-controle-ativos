@@ -88,7 +88,7 @@ export default function Login() {
     <div className={styles.container}>
       <div className={styles.card}>
         <div className={styles.logoContainer}>
-          <Image src={logoCejam} alt="CEJAM Logo" className={styles.logoImage} priority />
+          <Image src={logoCejam} alt="Logo" className={styles.logoImage} priority />
         </div>
         <h1 className={styles.mainTitle}>Gerenciamento de Ativos</h1>
         <h2 className={styles.title}>Acesse sua conta</h2>
@@ -124,10 +124,10 @@ export default function Login() {
         <footer className={styles.footer}>
           <p>Siga-nos nas redes sociais:</p>
           <div className={styles.socialIcons}>
-            <a href="https://www.facebook.com/cejamoficial/?locale=pt_BR" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><FaFacebook size={20} /></a>
-            <a href="https://www.instagram.com/cejamoficial/" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><FaInstagram size={20} /></a>
-            <a href="https://br.linkedin.com/company/cejam" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer"><FaLinkedin size={20} /></a>
-            <a href="https://www.youtube.com/tvcejam" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><FaYoutube size={20} /></a>
+            <a href="https://www.facebook.com/corporate/?locale=pt_BR" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><FaFacebook size={20} /></a>
+            <a href="https://www.instagram.com/corporate/" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><FaInstagram size={20} /></a>
+            <a href="https://br.linkedin.com/company/corporate" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer"><FaLinkedin size={20} /></a>
+            <a href="https://www.youtube.com/corporate" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><FaYoutube size={20} /></a>
           </div>
         </footer>
       </div>
