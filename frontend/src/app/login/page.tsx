@@ -9,7 +9,7 @@ import Button from '../../components/common/Button';
 import Modal from '../../components/common/Modal';
 import { loginUsuario, cadastrarUsuario } from '../../services';
 import styles from './login.module.css';
-import logoCejam from '../../assets/logos/cejamLogon.png';
+import logo from '../../assets/logos/logo.png';
 
 // Simple CPF Regex: 11 digits
 const CPF_REGEX = /^\d{11}$/;
@@ -88,7 +88,7 @@ export default function Login() {
     <div className={styles.container}>
       <div className={styles.card}>
         <div className={styles.logoContainer}>
-          <Image src={logoCejam} alt="Logo" className={styles.logoImage} priority />
+          <Image src={logo} alt="Logo" className={styles.logoImage} priority />
         </div>
         <h1 className={styles.mainTitle}>Gerenciamento de Ativos</h1>
         <h2 className={styles.title}>Acesse sua conta</h2>

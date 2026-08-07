@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { LayoutDashboard, Folder, Handshake, ChevronLeft } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import styles from './Sidebar.module.css';
-import logoCejam from '../../../assets/logos/cejamLogon.png';
+import logo from '../../../assets/logos/logo.png';
 
 const SidebarContent = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -20,7 +20,7 @@ const SidebarContent = () => {
       onMouseLeave={() => setIsExpanded(false)}
     >
       <div className={styles.logoContainer}>
-        <Image src={logoCejam} alt="CEJAM Logo" className={styles.logoImage} priority />
+        <Image src={logo} alt="Logo" className={styles.logoImage} priority />
       </div>
       <nav className={styles.nav}>
         <Link href="/" className={`${styles.navItem} ${view === 'inventario' ? styles.active : ''}`}>
