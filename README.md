@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./frontend/src/assets/logos/logo.png" alt="AssetFlow Logo" width="250"/>
+  <img src="./frontend/src/assets/logos/logo.png" alt="AssetFlow Logo" width="320"/>
   <h1>AssetFlow - Sistema de Controle de Ativos</h1>
   <p><strong>Projeto Prático de Engenharia Full Stack (.NET 8, Next.js, Clean Architecture e Docker)</strong></p>
 </div>
