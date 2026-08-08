@@ -11,7 +11,7 @@ public record CadastrarUsuarioRequest
     /// <summary>
     /// E-mail corporativo do usuário.
     /// </summary>
-    /// <example>joao@corporate.org.br</example>
+    /// <example>joao@assetflow.com</example>
     public string Email { get; init; } = string.Empty;
 
     /// <summary>
@@ -38,7 +38,7 @@ public record LoginRequest
     /// <summary>
     /// E-mail corporativo do usuário.
     /// </summary>
-    /// <example>admin@corporate.org.br</example>
+    /// <example>admin@assetflow.com</example>
     public string Email { get; init; } = string.Empty;
 
     /// <summary>

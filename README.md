@@ -1,18 +1,10 @@
-<div align="center">
-  <img src="./frontend/src/assets/logos/logo.png" alt="AssetFlow Logo" width="320"/>
-  <h1>AssetFlow - Sistema de Controle de Ativos</h1>
-  <p><strong>Projeto Prático de Engenharia Full Stack (.NET 8, Next.js, Clean Architecture e Docker)</strong></p>
-</div>
-
----
-
 ## Objetivo do Projeto
 
 O **AssetFlow** é um projeto prático desenvolvido para estudo e consolidação de **padrões modernos de engenharia de software**, **Clean Architecture**, **separação de responsabilidades** e **conteinerização**.
 
 Utilizando como cenário de estudo a gestão de equipamentos corporativos (como notebooks, monitores e periféricos), o projeto simula o fluxo completo de inventário, empréstimo (check-out) e devolução (check-in) de ativos, permitindo praticar a integração entre um backend em **.NET 8** e um frontend em **Next.js 14**, saindo um pouco da zona de conforto de sempre focar frontend.
 
-> 💡 **Foco:** O propósito principal deste repositório é o aprendizado prático, experimentação de decisões arquiteturais e evolução contínua de boas práticas de desenvolvimento Full Stack.
+>  **Foco:** O propósito principal deste repositório é o aprendizado prático, experimentação de decisões arquiteturais e evolução contínua de boas práticas de desenvolvimento Full Stack.
 
 ---
 
@@ -78,7 +70,7 @@ O projeto foi estruturado utilizando arquitetura desacoplada entre cliente e ser
 
 1. Clone o repositório:
    ```bash
-   git clone <https://github.com/lukinhasxxx/sistema-controle-ativos.git>
+   git clone https://github.com/lukinhasxxx/sistema-controle-ativos.git
    cd projetoassets
    ```
 

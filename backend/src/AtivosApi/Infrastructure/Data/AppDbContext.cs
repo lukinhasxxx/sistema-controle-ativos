@@ -71,7 +71,7 @@ public class AppDbContext : DbContext
         {
             Id = adminId,
             NomeCompleto = "Administrador TI",
-            Email = "admin@corporate.org.br",
+            Email = "admin@assetflow.com",
             Cpf = "00000000000",
             SenhaHash = "$2a$11$QZh0FZiCpRmQOJ7IQUD.qerGPmEEcsIqaKMgCBjmGrDYiCGHj5K8a", // 123456
             Setor = "TI"

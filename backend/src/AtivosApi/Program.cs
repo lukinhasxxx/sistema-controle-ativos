@@ -26,7 +26,7 @@ builder.Services.AddSwaggerGen(options =>
         Contact = new OpenApiContact
         {
             Name = "ADMIN TI",
-            Email = "ti@corporate.org.br"
+            Email = "admin@assetflow.com"
         }
     });
 
