@@ -1,16 +1,16 @@
-export interface CadastrarAtivoRequest {
+export interface CadastrarAtivoPayload {
   codigoIdentificacao: string;
   equipamento: string;
   categoria: string;
   usuarioCadastroId: string;
 }
 
-export interface EditarAtivoRequest {
+export interface EditarAtivoPayload {
   equipamento: string;
   categoria: string;
 }
 
-export interface EmprestarAtivoRequest {
+export interface EmprestarAtivoPayload {
   usuarioSolicitanteId: string;
   setorDestino: string;
   observacoes?: string;

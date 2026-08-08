@@ -1,5 +1,1 @@
-export interface UsuarioResponse {
-  id: string;
-  nomeCompleto: string;
-  setor: string;
-}
+export type { UsuarioResponseDTO } from '@/dtos';
