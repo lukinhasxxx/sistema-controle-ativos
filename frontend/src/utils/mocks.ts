@@ -1,6 +1,6 @@
-import type { AtivoResponse } from '../services/api/clients';
+import type { AtivoResponseDTO } from '../dtos';
 
-export const mockAtivos: AtivoResponse[] = [
+export const mockAtivos: AtivoResponseDTO[] = [
   {
     id: '1',
     codigoIdentificacao: 'AT001',

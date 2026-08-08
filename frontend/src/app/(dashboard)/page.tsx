@@ -13,7 +13,7 @@ import {
   excluirAtivo,
   getUsuarios,
 } from '../../services/api/clients';
-import type { AtivoResponse, StatusAtivo } from '../../services/api/clients';
+import type { AtivoResponseDTO, StatusAtivoDTO } from '../../dtos';
 import KpiCard from '../../components/features/KpiCard';
 import AtivosTable from '../../components/features/AtivosTable';
 import Modal from '../../components/common/Modal';
@@ -44,16 +44,16 @@ function getUsuarioLogado(): UsuarioLogado | null {
 // ──────────────────────────────────────────────────────────────────────────────
 function DashboardContent() {
   // Lista completa vinda da API
-  const [todosAtivos, setTodosAtivos] = useState<AtivoResponse[]>([]);
+  const [todosAtivos, setTodosAtivos] = useState<AtivoResponseDTO[]>([]);
   const [usuarios, setUsuarios] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const searchParams = useSearchParams();
   const view = (searchParams.get('view') as ViewMode) || 'inventario';
 
-  const [filtroStatus, setFiltroStatus] = useState<StatusAtivo | null>(null);
+  const [filtroStatus, setFiltroStatus] = useState<StatusAtivoDTO | null>(null);
 
-  const [selectedAtivo, setSelectedAtivo] = useState<AtivoResponse | null>(null);
+  const [selectedAtivo, setSelectedAtivo] = useState<AtivoResponseDTO | null>(null);
 
   // Form refs — evita criar state para cada campo do formulário
   const cadastrarFormRef = useRef<HTMLFormElement>(null);
@@ -90,7 +90,7 @@ function DashboardContent() {
   }, [fetchAtivosEUsuarios]);
 
   // ── Filtro por View e Setor ─────────────────────────────────────────────────
-  const ativosFiltradosPorView: AtivoResponse[] = (() => {
+  const ativosFiltradosPorView: AtivoResponseDTO[] = (() => {
     const usuario = getUsuarioLogado();
     
     if (view === 'todos-ativos') {
@@ -118,7 +118,7 @@ function DashboardContent() {
     ? ativosFiltradosPorView.filter((a) => a.status === filtroStatus)
     : ativosFiltradosPorView;
 
-  const handleKpiClick = (status: StatusAtivo | null) => {
+  const handleKpiClick = (status: StatusAtivoDTO | null) => {
     setFiltroStatus(prev => prev === status ? null : status);
   };
 
@@ -223,22 +223,22 @@ function DashboardContent() {
     }
   };
 
-  const openEmprestimo = (ativo: AtivoResponse) => {
+  const openEmprestimo = (ativo: AtivoResponseDTO) => {
     setSelectedAtivo(ativo);
     setIsEmprestimoModalOpen(true);
   };
 
-  const openDevolucao = (ativo: AtivoResponse) => {
+  const openDevolucao = (ativo: AtivoResponseDTO) => {
     setSelectedAtivo(ativo);
     setIsDevolucaoModalOpen(true);
   };
 
-  const openExcluir = (ativo: AtivoResponse) => {
+  const openExcluir = (ativo: AtivoResponseDTO) => {
     setSelectedAtivo(ativo);
     setIsExcluirModalOpen(true);
   };
 
-  const openEditar = (ativo: AtivoResponse) => {
+  const openEditar = (ativo: AtivoResponseDTO) => {
     setSelectedAtivo(ativo);
     setIsEditarModalOpen(true);
   };
