@@ -13,17 +13,17 @@
 }
 
 .logoContainer {
-  padding: 2rem 1.5rem;
+  padding: 1.25rem 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
 }
 
 .logoImage {
-  width: auto;
-  height: 90px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 190px;
+  height: auto;
+  max-height: 100px;
   object-fit: contain;
   margin: 0 auto;
 }

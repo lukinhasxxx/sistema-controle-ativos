@@ -3,7 +3,7 @@ import { Toaster } from 'react-hot-toast';
 import '../styles/globals.css';
 
 export const metadata: Metadata = {
-  title: 'Controle de Ativos - CEJAM',
+  title: 'Controle de Ativos',
   description: 'Sistema de Controle de Ativos',
 };
 

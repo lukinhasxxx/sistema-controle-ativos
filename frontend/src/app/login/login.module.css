@@ -24,15 +24,17 @@
 .logoContainer {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 2rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
   color: var(--primary-color);
+  width: 100%;
 }
 
 .logoImage {
-  width: 100px;
-  height: 100px;
+  width: 220px;
   max-width: 100%;
+  height: auto;
+  max-height: 110px;
   object-fit: contain;
 }
 

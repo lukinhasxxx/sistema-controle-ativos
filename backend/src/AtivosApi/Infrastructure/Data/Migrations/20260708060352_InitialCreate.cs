@@ -82,7 +82,7 @@ namespace AtivosApi.Infrastructure.Data.Migrations
             migrationBuilder.InsertData(
                 table: "Usuarios",
                 columns: new[] { "Id", "Cpf", "Email", "NomeCompleto", "SenhaHash", "Setor" },
-                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), "00000000000", "admin@cejam.org.br", "Administrador CEJAM", "hashed_password", "TI" });
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), "00000000000", "admin@corporate.org.br", "Administrador TI", "hashed_password", "TI" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ativos_CodigoIdentificacao",

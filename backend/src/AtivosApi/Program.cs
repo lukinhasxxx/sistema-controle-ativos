@@ -20,13 +20,13 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "CEJAM - API de Controle de Ativos",
+        Title = "API de Controle de Ativos",
         Version = "v1",
-        Description = "API RESTful para gerenciamento de ativos, empréstimos e devoluções do CEJAM.",
+        Description = "API RESTful para gerenciamento de ativos, empréstimos e devoluções",
         Contact = new OpenApiContact
         {
-            Name = "CEJAM TI",
-            Email = "ti@cejam.org.br"
+            Name = "ADMIN TI",
+            Email = "ti@corporate.org.br"
         }
     });
 

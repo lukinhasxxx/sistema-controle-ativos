@@ -70,8 +70,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Usuario>().HasData(new Usuario
         {
             Id = adminId,
-            NomeCompleto = "Administrador CEJAM",
-            Email = "admin@cejam.org.br",
+            NomeCompleto = "Administrador TI",
+            Email = "admin@corporate.org.br",
             Cpf = "00000000000",
             SenhaHash = "$2a$11$QZh0FZiCpRmQOJ7IQUD.qerGPmEEcsIqaKMgCBjmGrDYiCGHj5K8a", // 123456
             Setor = "TI"

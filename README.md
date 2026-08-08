@@ -1,94 +1,134 @@
 <div align="center">
-  <img src="./frontend/src/assets/logos/cejamLogon.png" alt="CEJAM Logo" width="250"/>
-  <h1>Ferramenta de Controle de Ativos</h1>
-  <p><strong>Desafio Técnico Full Stack - CEJAM</strong></p>
+  <img src="./frontend/src/assets/logos/logo.png" alt="AssetFlow Logo" width="320"/>
+  <h1>AssetFlow - Sistema de Controle de Ativos</h1>
+  <p><strong>Projeto Prático de Engenharia Full Stack (.NET 8, Next.js, Clean Architecture e Docker)</strong></p>
 </div>
 
 ---
 
-## Resumo do Projeto
+## Objetivo do Projeto
 
-Este projeto é uma **Ferramenta de Controle de Ativos** desenvolvida como parte do desafio técnico para uma vaga Full Stack no **CEJAM**. 
+O **AssetFlow** é um projeto prático desenvolvido para estudo e consolidação de **padrões modernos de engenharia de software**, **Clean Architecture**, **separação de responsabilidades** e **conteinerização**.
 
-O sistema foi desenhado para resolver um problema cotidiano em um pequeno escritório: substituir o controle de equipamentos compartilhados (como monitores, teclados e projetores), anteriormente feito por planilhas sujeitas a falhas e perdas, por uma aplicação web moderna, responsiva e segura.
+Utilizando como cenário de estudo a gestão de equipamentos corporativos (como notebooks, monitores e periféricos), o projeto simula o fluxo completo de inventário, empréstimo (check-out) e devolução (check-in) de ativos, permitindo praticar a integração entre um backend em **.NET 8** e um frontend em **Next.js 14**, saindo um pouco da zona de conforto de sempre focar frontend.
 
-Através deste sistema, administradores podem cadastrar, listar e gerenciar o empréstimo (check-out) e a devolução (check-in) de equipamentos de forma eficiente.
+> 💡 **Foco:** O propósito principal deste repositório é o aprendizado prático, experimentação de decisões arquiteturais e evolução contínua de boas práticas de desenvolvimento Full Stack.
 
-## O Desafio Técnico
+---
 
-O objetivo do desafio era construir uma aplicação "Full Stack" robusta que contemplasse tanto o backend quanto o frontend, aderindo às melhores práticas do mercado. O sistema precisava implementar o **Caso de Negócio 1 (Ferramenta de Controle de Ativos)**.
+## Arquitetura e Boas Práticas
 
-As exigências incluíam:
-- **Backend**: Desenvolver uma API em .NET 8 utilizando SQLite e Entity Framework Core, com separação clara de responsabilidades (Controllers e Services), respostas JSON e códigos HTTP adequados.
-- **Frontend**: Uma SPA reativa construída com Next.js, React e TypeScript, focada em componentes reutilizáveis, gerenciamento de estado sem recarregar a página e design responsivo.
-- **Diferenciais Implementados**: Containerização da aplicação usando Docker e Docker Compose para facilitar a orquestração e execução local.
+O projeto foi estruturado utilizando arquitetura desacoplada entre cliente e servidor:
+
+- **Backend (.NET 8):** API RESTful construída em C# seguindo princípios de Clean Architecture. Possui separação estrita de camadas: Controllers (interface HTTP), Services (regras de negócio), DTOs (contratos de entrada e saída) e Infrastructure (acesso a dados com Entity Framework Core e SQLite).
+- **Validações de Domínio:** Uso do FluentValidation para garantir consistência de dados antes de processar regras de negócio.
+- **Segurança de Dados:** Uso de DTOs para impedir exposição indevida de dados internos ou sensíveis.
+- **Soft Delete:** Remoção lógica de ativos para preservação da integridade do histórico de empréstimos e auditorias.
+- **Frontend (Next.js 14 & React):** Single Page Application (SPA) responsiva com TypeScript, CSS Modules para isolamento de estilos e componentes modulares reutilizáveis.
+- **Infraestrutura (Docker):** Orquestração completa via Docker Compose com volume persistente para o banco de dados SQLite.
+
+---
 
 ## Tecnologias Utilizadas
 
-**Backend:**
-- **.NET 8 (C#)**
-- **Entity Framework Core**
-- **SQLite** (Banco de dados relacional leve e embutido)
-- **Padrões de Projeto**: Camadas de Serviços, Injeção de Dependência, DTOs
+### Backend
+- .NET 8 (C#)
+- ASP.NET Core Web API
+- Entity Framework Core 8
+- SQLite (Banco de dados relacional)
+- FluentValidation (Validação de requisições)
+- xUnit & Moq (Testes unitários)
+- Swagger / OpenAPI (Documentação da API)
 
-**Frontend:**
-- **Next.js & React**
-- **TypeScript**
-- **CSS Modules / Vanilla CSS**
-- **React Hot Toast** (para notificações visuais)
-- **React Icons**
+### Frontend
+- Next.js 14 (App Router)
+- React 18
+- TypeScript
+- CSS Modules
+- React Hot Toast (Notificações)
+- Lucide React & React Icons (Iconografia)
 
-**Infraestrutura:**
-- **Docker**
-- **Docker Compose**
+### Infraestrutura
+- Docker
+- Docker Compose
+
+---
 
 ## Regras de Negócio e Funcionalidades
 
-O sistema foi modelado em torno do rastreamento do ciclo de vida de ativos físicos:
-
-1. **Cadastrar um Ativo:**
-   - Todo equipamento deve ser registrado com um nome e um **Código de Identificação único**.
-2. **Listagem em Tempo Real:**
-   - Exibição de todos os ativos cadastrados e seus respectivos status atuais: `Disponível` ou `Em uso`.
+1. **Cadastro de Ativos:**
+   - Todo equipamento deve ser registrado com nome, categoria e um **Código de Identificação único**.
+2. **Listagem e Status:**
+   - Visualização em tempo real de ativos cadastrados e seus status (`Disponível` ou `Em uso`).
 3. **Check-out (Realizar Empréstimo):**
-   - Apenas equipamentos com o status `Disponível` podem ser emprestados. Ao realizar o check-out, o sistema marca o item como `Em uso` e vincula o usuário/setor solicitante, juntamente com a data do empréstimo.
+   - Apenas equipamentos com o status `Disponível` podem ser emprestados. Ao realizar o check-out, o sistema altera o status para `Em uso` e vincula o usuário/setor solicitante e a data do empréstimo.
 4. **Check-in (Registrar Devolução):**
-   - O item retorna ao status `Disponível`. O sistema registra a data de devolução, encerrando o ciclo do empréstimo daquele equipamento.
-5. **Remover Ativo (Soft Delete / Inativação):**
-   - Caso um equipamento seja danificado, perdido ou aposentado, ele pode ser removido logicamente da listagem, sem que os históricos de empréstimos antigos associados a ele sejam perdidos no banco de dados.
+   - O item retorna ao status `Disponível`. O sistema registra a data de devolução, finalizando o ciclo.
+5. **Remover Ativo (Soft Delete):**
+   - Ativos danificados ou aposentados são desativados logicamente da listagem, mantendo os registros históricos intactos no banco de dados.
 
-## Como Rodar Localmente (Docker Compose)
+---
 
-Graças ao uso do Docker, a execução do projeto localmente foi simplificada para exigir apenas um comando. Não é necessário ter o .NET, Node.js ou SQLite instalados diretamente na sua máquina; o Docker cuida de tudo!
+## Como Rodar a Aplicação
 
 ### Pré-requisitos
-- Ter o [Docker](https://www.docker.com/products/docker-desktop/) e o **Docker Compose** instalados.
+- Docker e Docker Compose instalados **OU** SDK do .NET 8 e Node.js 18+ para execução local.
 
-### Passos para execução:
+### Opção 1: Via Docker Compose (Recomendado)
 
-1. Clone o repositório para a sua máquina:
+1. Clone o repositório:
    ```bash
-   git clone <URL_DO_REPOSITORIO>
+   git clone <https://github.com/lukinhasxxx/sistema-controle-ativos.git>
    cd projetoassets
    ```
 
-2. Na raiz do projeto (onde está o arquivo `docker-compose.yml`), execute:
+2. Execute o orquestrador:
    ```bash
    docker compose up --build -d
    ```
 
-3. O que acontece em seguida?
-   - O contêiner do `db` vai ser inicializado criando a pasta persistente e o volume pro banco SQLite.
-   - A `API` vai ser construída em um contêiner baseado no SDK do .NET 8, publicando a versão de runtime e se conectando ao banco de dados no volume. Ela também vai rodar automaticamente as migrações (EF Core) garantindo que as tabelas estejam criadas.
-   - O `Frontend` será construído e servido em uma instância do Next.js via Node.
+3. Acesse as aplicações:
+   - **Frontend:** http://localhost:3000
+   - **Backend API (Swagger):** http://localhost:5218
 
-4. Acesse as aplicações:
-   - **Frontend (Interface do Usuário):** [http://localhost:3000](http://localhost:3000)
-   - **Backend (API Base URL):** [http://localhost:5218](http://localhost:5218)
-
-### Para parar e remover os contêineres:
+Para parar os contêineres:
 ```bash
 docker compose down
 ```
 
 ---
+
+### Opção 2: Execução Manual (Desenvolvimento)
+
+1. **Backend:**
+   ```bash
+   cd backend/src/AtivosApi
+   dotnet run
+   ```
+
+2. **Frontend:**
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+---
+
+## Estrutura do Repositório
+
+```text
+├── backend/
+│   ├── src/AtivosApi/
+│   │   ├── Domain/            # Entidades, DTOs, Interfaces, Validators e Services
+│   │   ├── Infrastructure/    # DbContext, Mapeamentos EF e Migrations
+│   │   └── Controllers/       # Endpoints REST
+│   └── tests/AtivosApi.Tests/ # Testes Unitários com xUnit
+├── frontend/
+│   ├── src/
+│   │   ├── app/               # Páginas e Rotas do Next.js (App Router)
+│   │   ├── components/        # Componentes reutilizáveis (Common e Features)
+│   │   ├── services/          # Comunicação HTTP com a API
+│   │   └── styles/            # Estilos CSS Modules e Globais
+└── docker-compose.yml         # Orquestração do ambiente
+```

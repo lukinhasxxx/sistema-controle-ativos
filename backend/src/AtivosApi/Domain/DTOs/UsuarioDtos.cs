@@ -11,7 +11,7 @@ public record CadastrarUsuarioRequest
     /// <summary>
     /// E-mail corporativo do usuário.
     /// </summary>
-    /// <example>joao@cejam.org.br</example>
+    /// <example>joao@corporate.org.br</example>
     public string Email { get; init; } = string.Empty;
 
     /// <summary>
@@ -38,7 +38,7 @@ public record LoginRequest
     /// <summary>
     /// E-mail corporativo do usuário.
     /// </summary>
-    /// <example>admin@cejam.org.br</example>
+    /// <example>admin@corporate.org.br</example>
     public string Email { get; init; } = string.Empty;
 
     /// <summary>

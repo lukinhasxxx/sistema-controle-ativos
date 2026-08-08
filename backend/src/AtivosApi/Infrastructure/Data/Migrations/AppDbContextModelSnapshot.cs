@@ -139,8 +139,8 @@ namespace AtivosApi.Infrastructure.Data.Migrations
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             Cpf = "00000000000",
-                            Email = "admin@cejam.org.br",
-                            NomeCompleto = "Administrador CEJAM",
+                            Email = "admin@corporate.org.br",
+                            NomeCompleto = "Administrador TI",
                             SenhaHash = "$2a$11$QZh0FZiCpRmQOJ7IQUD.qerGPmEEcsIqaKMgCBjmGrDYiCGHj5K8a",
                             Setor = "TI"
                         });
