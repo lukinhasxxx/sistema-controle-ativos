@@ -11,7 +11,6 @@ import { loginUsuario, cadastrarUsuario } from '../../services';
 import styles from './login.module.css';
 import logo from '../../assets/logos/logo.png';
 
-// Simple CPF Regex: 11 digits
 const CPF_REGEX = /^\d{11}$/;
 
 export default function Login() {
@@ -20,11 +19,9 @@ export default function Login() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
 
-  // Login form
   const [loginEmail, setLoginEmail] = useState('');
   const [loginSenha, setLoginSenha] = useState('');
 
-  // Register form
   const [regNome, setRegNome] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regSetor, setRegSetor] = useState('');
@@ -124,10 +121,10 @@ export default function Login() {
         <footer className={styles.footer}>
           <p>Siga-nos nas redes sociais:</p>
           <div className={styles.socialIcons}>
-            <a href="https://www.facebook.com/corporate/?locale=pt_BR" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><FaFacebook size={20} /></a>
-            <a href="https://www.instagram.com/corporate/" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><FaInstagram size={20} /></a>
-            <a href="https://br.linkedin.com/company/corporate" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer"><FaLinkedin size={20} /></a>
-            <a href="https://www.youtube.com/corporate" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><FaYoutube size={20} /></a>
+            <a href="#" aria-label="Facebook" rel="noopener noreferrer"><FaFacebook size={20} /></a>
+            <a href="#" aria-label="Instagram" rel="noopener noreferrer"><FaInstagram size={20} /></a>
+            <a href="#" aria-label="LinkedIn" rel="noopener noreferrer"><FaLinkedin size={20} /></a>
+            <a href="#" aria-label="YouTube" rel="noopener noreferrer"><FaYoutube size={20} /></a>
           </div>
         </footer>
       </div>
