@@ -16,7 +16,8 @@ O projeto foi estruturado utilizando arquitetura desacoplada entre cliente e ser
 - **Validações de Domínio:** Uso do FluentValidation para garantir consistência de dados antes de processar regras de negócio.
 - **Segurança de Dados:** Uso de DTOs para impedir exposição indevida de dados internos ou sensíveis.
 - **Soft Delete:** Remoção lógica de ativos para preservação da integridade do histórico de empréstimos e auditorias.
-- **Frontend (Next.js 14 & React):** Single Page Application (SPA) responsiva com TypeScript, CSS Modules para isolamento de estilos e componentes modulares reutilizáveis.
+- **Frontend (Next.js 14 & React):** Single Page Application com TypeScript em arquitetura modular (*Feature-Based*), separação estrita entre Contratos de Dados (`src/dtos/`), Clientes HTTP de API por rota (`src/services/api/clients/`) e Componentes Visuais com CSS Modules.
+- **Identidade Estética:** Interface moderna e responsiva com temática espacial/astronômica minimalista (*Space Navy*, azul ciano elétrico e branco).
 - **Infraestrutura (Docker):** Orquestração completa via Docker Compose com volume persistente para o banco de dados SQLite.
 
 ---
@@ -50,14 +51,14 @@ O projeto foi estruturado utilizando arquitetura desacoplada entre cliente e ser
 
 1. **Cadastro de Ativos:**
    - Todo equipamento deve ser registrado com nome, categoria e um **Código de Identificação único**.
-2. **Listagem e Status:**
-   - Visualização em tempo real de ativos cadastrados e seus status (`Disponível` ou `Em uso`).
+2. **Listagem e Gestão de Status:**
+   - Visualização em tempo real de ativos cadastrados controlando os 4 status do sistema: `Disponível`, `Em Uso`, `Manutenção` e `Estoque`.
 3. **Check-out (Realizar Empréstimo):**
-   - Apenas equipamentos com o status `Disponível` podem ser emprestados. Ao realizar o check-out, o sistema altera o status para `Em uso` e vincula o usuário/setor solicitante e a data do empréstimo.
+   - Apenas equipamentos com o status `Disponível` podem ser emprestados. Ao realizar o check-out, o sistema altera o status para `Em Uso` e vincula o usuário/setor solicitante e a data do empréstimo.
 4. **Check-in (Registrar Devolução):**
    - O item retorna ao status `Disponível`. O sistema registra a data de devolução, finalizando o ciclo.
 5. **Remover Ativo (Soft Delete):**
-   - Ativos danificados ou aposentados são desativados logicamente da listagem, mantendo os registros históricos intactos no banco de dados.
+   - Ativos desativados são removidos logicamente da listagem principal, mantendo os registros históricos intactos no banco de dados.
 
 ---
 
