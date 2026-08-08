@@ -20,7 +20,7 @@ const SidebarContent = () => {
       onMouseLeave={() => setIsExpanded(false)}
     >
       <div className={styles.logoContainer}>
-        <Image src={logo} alt="Logo" className={styles.logoImage} priority />
+        <Image src={logo} alt="AssetFlow Logo" className={styles.logoImage} priority />
       </div>
       <nav className={styles.nav}>
         <Link href="/" className={`${styles.navItem} ${view === 'inventario' ? styles.active : ''}`}>

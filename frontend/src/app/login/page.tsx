@@ -88,7 +88,7 @@ export default function Login() {
     <div className={styles.container}>
       <div className={styles.card}>
         <div className={styles.logoContainer}>
-          <Image src={logo} alt="Logo" className={styles.logoImage} priority />
+          <Image src={logo} alt="AssetFlow Logo" className={styles.logoImage} priority />
         </div>
         <h1 className={styles.mainTitle}>Gerenciamento de Ativos</h1>
         <h2 className={styles.title}>Acesse sua conta</h2>
