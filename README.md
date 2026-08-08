@@ -120,7 +120,8 @@ docker compose down
 │   ├── src/
 │   │   ├── app/               # Páginas e Rotas do Next.js (App Router)
 │   │   ├── components/        # Componentes reutilizáveis (Common e Features)
-│   │   ├── services/          # Comunicação HTTP com a API
+│   │   ├── dtos/              # Contratos e DTOs globais da API
+│   │   ├── services/          # Clientes HTTP e comunicação com a API
 │   │   └── styles/            # Estilos CSS Modules e Globais
 └── docker-compose.yml         # Orquestração do ambiente
 ```
