@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Handshake, CornerUpLeft, Pencil, Trash, ArrowUpDown, CheckCircle, MonitorPlay, AlertTriangle, Box } from 'lucide-react';
-import type { AtivoResponse } from '../../../services/api/clients';
+import type { AtivoResponseDTO } from '../../../dtos';
 import styles from './AtivosTable.module.css';
 
 interface AtivosTableProps {
-  ativos: AtivoResponse[];
-  onEmprestimo: (ativo: AtivoResponse) => void;
-  onDevolucao: (ativo: AtivoResponse) => void;
-  onEditar: (ativo: AtivoResponse) => void;
-  onExcluir: (ativo: AtivoResponse) => void;
+  ativos: AtivoResponseDTO[];
+  onEmprestimo: (ativo: AtivoResponseDTO) => void;
+  onDevolucao: (ativo: AtivoResponseDTO) => void;
+  onEditar: (ativo: AtivoResponseDTO) => void;
+  onExcluir: (ativo: AtivoResponseDTO) => void;
 }
 
 // Colunas que suportam ordenação

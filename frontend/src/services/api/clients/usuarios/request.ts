@@ -1,9 +1,9 @@
-export interface LoginRequest {
+export interface LoginPayload {
   email: string;
   senha: string;
 }
 
-export interface CadastrarUsuarioRequest {
+export interface CadastrarUsuarioPayload {
   nomeCompleto: string;
   email: string;
   cpf: string;

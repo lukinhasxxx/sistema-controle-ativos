@@ -1,13 +1,13 @@
 import { api, handleError } from '../../../api';
-import type { CadastrarAtivoRequest, EditarAtivoRequest, EmprestarAtivoRequest } from './request';
-import type { AtivoResponse, EmprestimoResponse } from './response';
+import type { CadastrarAtivoPayload, EditarAtivoPayload, EmprestarAtivoPayload } from './request';
+import type { AtivoResponseDTO, EmprestimoResponseDTO } from '@/dtos';
 
-export type { CadastrarAtivoRequest, EditarAtivoRequest, EmprestarAtivoRequest } from './request';
-export type { AtivoResponse, EmprestimoResponse, StatusAtivo } from './response';
+export type { CadastrarAtivoPayload, EditarAtivoPayload, EmprestarAtivoPayload } from './request';
+export type { AtivoResponseDTO, EmprestimoResponseDTO, StatusAtivoDTO } from '@/dtos';
 
-export async function getAtivos(incluirExcluidos = false): Promise<AtivoResponse[]> {
+export async function getAtivos(incluirExcluidos = false): Promise<AtivoResponseDTO[]> {
   try {
-    const { data } = await api.get<AtivoResponse[]>('/ativos', {
+    const { data } = await api.get<AtivoResponseDTO[]>('/ativos', {
       params: { incluirExcluidos },
     });
     return data;
@@ -16,9 +16,9 @@ export async function getAtivos(incluirExcluidos = false): Promise<AtivoResponse
   }
 }
 
-export async function cadastrarAtivo(payload: CadastrarAtivoRequest): Promise<AtivoResponse> {
+export async function cadastrarAtivo(payload: CadastrarAtivoPayload): Promise<AtivoResponseDTO> {
   try {
-    const { data } = await api.post<AtivoResponse>('/ativos', payload);
+    const { data } = await api.post<AtivoResponseDTO>('/ativos', payload);
     return data;
   } catch (error) {
     throw handleError(error);
@@ -27,10 +27,10 @@ export async function cadastrarAtivo(payload: CadastrarAtivoRequest): Promise<At
 
 export async function editarAtivo(
   id: string,
-  payload: EditarAtivoRequest,
-): Promise<AtivoResponse> {
+  payload: EditarAtivoPayload,
+): Promise<AtivoResponseDTO> {
   try {
-    const { data } = await api.put<AtivoResponse>(`/ativos/${id}`, payload);
+    const { data } = await api.put<AtivoResponseDTO>(`/ativos/${id}`, payload);
     return data;
   } catch (error) {
     throw handleError(error);
@@ -39,19 +39,19 @@ export async function editarAtivo(
 
 export async function emprestarAtivo(
   id: string,
-  payload: EmprestarAtivoRequest,
-): Promise<EmprestimoResponse> {
+  payload: EmprestarAtivoPayload,
+): Promise<EmprestimoResponseDTO> {
   try {
-    const { data } = await api.post<EmprestimoResponse>(`/ativos/${id}/emprestar`, payload);
+    const { data } = await api.post<EmprestimoResponseDTO>(`/ativos/${id}/emprestar`, payload);
     return data;
   } catch (error) {
     throw handleError(error);
   }
 }
 
-export async function devolverAtivo(id: string): Promise<AtivoResponse> {
+export async function devolverAtivo(id: string): Promise<AtivoResponseDTO> {
   try {
-    const { data } = await api.post<AtivoResponse>(`/ativos/${id}/devolver`);
+    const { data } = await api.post<AtivoResponseDTO>(`/ativos/${id}/devolver`);
     return data;
   } catch (error) {
     throw handleError(error);
