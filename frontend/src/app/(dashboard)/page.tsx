@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react
 import { useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { Plus, AlertCircle, LayoutGrid, Package, Monitor, Loader2 } from 'lucide-react';
-import { IAtivo, StatusAtivo } from '../../types';
 import {
   getAtivos,
   cadastrarAtivo,
@@ -13,7 +12,8 @@ import {
   devolverAtivo,
   excluirAtivo,
   getUsuarios,
-} from '../../services';
+} from '../../services/api/clients';
+import type { AtivoResponse, StatusAtivo } from '../../services/api/clients';
 import KpiCard from '../../components/features/KpiCard';
 import AtivosTable from '../../components/features/AtivosTable';
 import Modal from '../../components/common/Modal';
@@ -44,7 +44,7 @@ function getUsuarioLogado(): UsuarioLogado | null {
 // ──────────────────────────────────────────────────────────────────────────────
 function DashboardContent() {
   // Lista completa vinda da API
-  const [todosAtivos, setTodosAtivos] = useState<IAtivo[]>([]);
+  const [todosAtivos, setTodosAtivos] = useState<AtivoResponse[]>([]);
   const [usuarios, setUsuarios] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -53,7 +53,7 @@ function DashboardContent() {
 
   const [filtroStatus, setFiltroStatus] = useState<StatusAtivo | null>(null);
 
-  const [selectedAtivo, setSelectedAtivo] = useState<IAtivo | null>(null);
+  const [selectedAtivo, setSelectedAtivo] = useState<AtivoResponse | null>(null);
 
   // Form refs — evita criar state para cada campo do formulário
   const cadastrarFormRef = useRef<HTMLFormElement>(null);
@@ -90,7 +90,7 @@ function DashboardContent() {
   }, [fetchAtivosEUsuarios]);
 
   // ── Filtro por View e Setor ─────────────────────────────────────────────────
-  const ativosFiltradosPorView: IAtivo[] = (() => {
+  const ativosFiltradosPorView: AtivoResponse[] = (() => {
     const usuario = getUsuarioLogado();
     
     if (view === 'todos-ativos') {
@@ -129,13 +129,16 @@ function DashboardContent() {
     if (!form) return;
 
     const usuario = getUsuarioLogado();
+    if (!usuario || !usuario.id) {
+      toast.error('Sessão inválida. Faça login novamente.');
+      return;
+    }
+
     const payload = {
+      codigoIdentificacao: (form.elements.namedItem('codigo') as HTMLInputElement)?.value,
       equipamento: (form.elements.namedItem('equipamento') as HTMLInputElement)?.value,
-      codigo: (form.elements.namedItem('codigo') as HTMLInputElement)?.value,
       categoria: (form.elements.namedItem('categoria') as HTMLSelectElement)?.value,
-      status: (form.elements.namedItem('status') as HTMLSelectElement)?.value,
-      usuarioCadastroId: usuario?.id ?? null,
-      setor: usuario?.setor ?? null,
+      usuarioCadastroId: usuario.id,
     };
 
     try {
@@ -220,22 +223,22 @@ function DashboardContent() {
     }
   };
 
-  const openEmprestimo = (ativo: IAtivo) => {
+  const openEmprestimo = (ativo: AtivoResponse) => {
     setSelectedAtivo(ativo);
     setIsEmprestimoModalOpen(true);
   };
 
-  const openDevolucao = (ativo: IAtivo) => {
+  const openDevolucao = (ativo: AtivoResponse) => {
     setSelectedAtivo(ativo);
     setIsDevolucaoModalOpen(true);
   };
 
-  const openExcluir = (ativo: IAtivo) => {
+  const openExcluir = (ativo: AtivoResponse) => {
     setSelectedAtivo(ativo);
     setIsExcluirModalOpen(true);
   };
 
-  const openEditar = (ativo: IAtivo) => {
+  const openEditar = (ativo: AtivoResponse) => {
     setSelectedAtivo(ativo);
     setIsEditarModalOpen(true);
   };

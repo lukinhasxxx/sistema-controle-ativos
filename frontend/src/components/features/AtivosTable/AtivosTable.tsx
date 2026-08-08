@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Handshake, CornerUpLeft, Pencil, Trash, ArrowUpDown, CheckCircle, MonitorPlay, AlertTriangle, Box } from 'lucide-react';
-import { IAtivo } from '../../../types';
+import type { AtivoResponse } from '../../../services/api/clients';
 import styles from './AtivosTable.module.css';
 
 interface AtivosTableProps {
-  ativos: IAtivo[];
-  onEmprestimo: (ativo: IAtivo) => void;
-  onDevolucao: (ativo: IAtivo) => void;
-  onEditar: (ativo: IAtivo) => void;
-  onExcluir: (ativo: IAtivo) => void;
+  ativos: AtivoResponse[];
+  onEmprestimo: (ativo: AtivoResponse) => void;
+  onDevolucao: (ativo: AtivoResponse) => void;
+  onEditar: (ativo: AtivoResponse) => void;
+  onExcluir: (ativo: AtivoResponse) => void;
 }
 
 // Colunas que suportam ordenação
@@ -117,7 +117,7 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
           {sortedAtivos.map((ativo) => (
             <tr key={ativo.id} style={{ opacity: ativo.isExcluido ? 0.6 : 1, backgroundColor: ativo.isExcluido ? '#fef2f2' : 'transparent' }}>
               <td>
-                {ativo.codigo}
+                {ativo.codigoIdentificacao}
                 {ativo.isExcluido && (
                   <span style={{ marginLeft: 8, fontSize: '0.7rem', background: '#e53e3e', color: 'white', padding: '2px 6px', borderRadius: 4 }}>
                     Excluído
@@ -196,7 +196,7 @@ const AtivosTable: React.FC<AtivosTableProps> = ({
         {sortedAtivos.map((ativo) => (
           <div key={ativo.id} className={styles.mobileCard}>
             <div className={styles.cardHeader}>
-              <span className={styles.cardCode}>{ativo.codigo}</span>
+              <span className={styles.cardCode}>{ativo.codigoIdentificacao}</span>
               <span className={`${styles.statusBadge} ${getStatusClass(ativo.status)}`} style={{ display: 'inline-flex', alignItems: 'center' }}>
                 {getStatusIcon(ativo.status)}
                 {ativo.status}

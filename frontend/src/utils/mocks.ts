@@ -1,59 +1,59 @@
-import { IAtivo, IUsuario } from '../types';
+import type { AtivoResponse } from '../services/api/clients';
 
-export const mockAtivos: IAtivo[] = [
+export const mockAtivos: AtivoResponse[] = [
   {
     id: '1',
-    codigo: 'AT001',
     codigoIdentificacao: 'AT001',
     equipamento: 'Monitor Dell 24"',
     categoria: 'Monitor',
     status: 'Disponível',
     responsavel: null,
     setor: 'TI',
+    isExcluido: false,
+    usuarioCadastroId: '11111111-1111-1111-1111-111111111111',
   },
   {
     id: '2',
-    codigo: 'AT002',
     codigoIdentificacao: 'AT002',
     equipamento: 'Projetor Epson',
     categoria: 'Projetor',
     status: 'Em Uso',
     responsavel: 'João Silva',
     setor: 'Administrativo',
+    isExcluido: false,
+    usuarioCadastroId: '11111111-1111-1111-1111-111111111111',
   },
   {
     id: '3',
-    codigo: 'AT003',
     codigoIdentificacao: 'AT003',
     equipamento: 'Notebook Lenovo',
     categoria: 'Notebook',
     status: 'Disponível',
     responsavel: null,
     setor: 'TI',
+    isExcluido: false,
+    usuarioCadastroId: '11111111-1111-1111-1111-111111111111',
   },
   {
     id: '4',
-    codigo: 'AT004',
     codigoIdentificacao: 'AT004',
     equipamento: 'Mouse Logitech',
     categoria: 'Periférico',
     status: 'Em Uso',
     responsavel: 'Maria Santos',
     setor: 'RH',
+    isExcluido: false,
+    usuarioCadastroId: '11111111-1111-1111-1111-111111111111',
   },
   {
     id: '5',
-    codigo: 'AT005',
     codigoIdentificacao: 'AT005',
     equipamento: 'Teclado Mecânico',
     categoria: 'Periférico',
     status: 'Manutenção',
     responsavel: null,
     setor: 'Financeiro',
+    isExcluido: false,
+    usuarioCadastroId: '11111111-1111-1111-1111-111111111111',
   },
 ];
-
-export const mockUsuario: IUsuario = {
-  id: 'u1',
-  nome: 'Lucas Silva Testes',
-};
