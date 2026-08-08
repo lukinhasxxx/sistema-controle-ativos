@@ -1,3 +1,23 @@
-// Barrel de compatibilidade — re-exporta tudo do index para manter
-// imports existentes que referenciam 'services/api' funcionando.
-export * from './index';
+import axios, { AxiosError } from 'axios';
+
+const api = axios.create({
+  baseURL: 'http://localhost:5218/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+export function handleError(error: unknown): Error {
+  if (error instanceof AxiosError) {
+    const msg =
+      error.response?.data?.mensagem ??
+      error.response?.data?.message ??
+      error.response?.data ??
+      error.message ??
+      'Erro desconhecido na API.';
+    return new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
+  }
+  return error instanceof Error ? error : new Error('Erro inesperado.');
+}
+
+export { api };
